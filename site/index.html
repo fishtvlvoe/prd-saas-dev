@@ -137,6 +137,41 @@ p { font-size: 1rem; color: var(--text-secondary); }
   border-color: var(--accent);
 }
 
+/* ========== STICKY NAV ========== */
+.sticky-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10, 10, 12, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.sticky-nav a {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  text-decoration: none;
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  transition: all 0.2s;
+}
+
+.sticky-nav a:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+@media (max-width: 600px) {
+  .sticky-nav .container { gap: 8px; }
+  .sticky-nav a {
+    font-size: 0.72rem;
+    padding: 6px 10px;
+  }
+}
+
 /* ========== GRID LAYOUTS ========== */
 .grid-2 {
   display: grid;
@@ -977,6 +1012,28 @@ code {
   opacity: 1;
 }
 
+.term-tip--clickable {
+  cursor: pointer;
+  border-bottom-style: dashed;
+  border-bottom-width: 1px;
+  border-bottom-color: var(--accent);
+}
+
+.term-tip--clickable:hover {
+  color: var(--accent);
+}
+
+.term-highlight {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  animation: highlight-pulse 2s ease-out forwards;
+}
+
+@keyframes highlight-pulse {
+  0% { outline-color: var(--accent); }
+  100% { outline-color: transparent; }
+}
+
 @media (max-width: 600px) {
   .term-tip__text {
     white-space: normal;
@@ -987,6 +1044,16 @@ code {
 </style>
 </head>
 <body>
+
+<!-- ==================== STICKY NAV ==================== -->
+<nav class="sticky-nav">
+  <div class="container" style="display:flex; gap:12px; flex-wrap:wrap;">
+    <a href="#glossary">術語翻譯</a>
+    <a href="#why">WHY</a>
+    <a href="#how">HOW</a>
+    <a href="#what">WHAT</a>
+  </div>
+</nav>
 
 <!-- ==================== HERO ==================== -->
 <section class="hero">
@@ -999,12 +1066,6 @@ code {
       <p class="hero-sub">
         用 <span class="term-tip">Popper 證偽主義<span class="term-tip__text">好的想法必須能被「證明是錯的」</span></span>取代瀑布式開發。用<span class="term-tip">熵減原則<span class="term-tip__text">主動讓東西保持簡單，不讓它自然變亂</span></span>取代功能堆積。用血清素設計取代多巴胺陷阱。這是一份關於「為什麼這樣做」的完整紀錄。
       </p>
-      <nav class="hero-nav">
-        <a href="#glossary">術語翻譯</a>
-        <a href="#why">WHY</a>
-        <a href="#how">HOW</a>
-        <a href="#what">WHAT</a>
-      </nav>
     </div>
   </div>
 </section>
@@ -1021,7 +1082,7 @@ code {
     <div class="glossary-grid">
 
       <!-- SDD -->
-      <div class="explain-card reveal">
+      <div class="explain-card reveal" id="term-sdd">
         <span class="explain-card__term">SDD -- 規格驅動開發 (Spec-Driven Development)</span>
         <p class="explain-card__plain">先寫好「完成品長什麼樣」的說明書，再開始動手做</p>
         <div class="explain-card__analogy">
@@ -1040,7 +1101,7 @@ code {
       </div>
 
       <!-- TDD -->
-      <div class="explain-card reveal">
+      <div class="explain-card reveal" id="term-tdd">
         <span class="explain-card__term">TDD -- 測試驅動開發 (Test-Driven Development)</span>
         <p class="explain-card__plain">先寫「怎樣算失敗」的考卷，再寫程式去通過考試</p>
         <div class="explain-card__analogy">
@@ -1066,7 +1127,7 @@ code {
       </div>
 
       <!-- PRD -->
-      <div class="explain-card reveal">
+      <div class="explain-card reveal" id="term-prd">
         <span class="explain-card__term">PRD -- 產品需求文件 (Product Requirements Document)</span>
         <p class="explain-card__plain">一份寫清楚「這個東西要做什麼」的計畫書</p>
         <div class="explain-card__analogy">
@@ -1083,7 +1144,7 @@ code {
       </div>
 
       <!-- RAG -->
-      <div class="explain-card reveal">
+      <div class="explain-card reveal" id="term-rag">
         <span class="explain-card__term">RAG -- 檢索增強生成 (Retrieval-Augmented Generation)</span>
         <p class="explain-card__plain">AI 先去翻資料庫找答案，再用自己的話回答你</p>
         <div class="explain-card__analogy">
@@ -1102,7 +1163,7 @@ code {
       </div>
 
       <!-- LLM -->
-      <div class="explain-card reveal">
+      <div class="explain-card reveal" id="term-llm">
         <span class="explain-card__term">LLM -- 大型語言模型 (Large Language Model)</span>
         <p class="explain-card__plain">讀過幾乎所有網路上文字的 AI，能理解和產生人類語言</p>
         <div class="explain-card__analogy">
@@ -1121,7 +1182,7 @@ code {
       </div>
 
       <!-- Spec -->
-      <div class="explain-card reveal">
+      <div class="explain-card reveal" id="term-spec">
         <span class="explain-card__term">Spec -- 規格書 (Specification)</span>
         <p class="explain-card__plain">描述「做好的東西要符合什麼條件」的清單</p>
         <div class="explain-card__analogy">
@@ -1138,7 +1199,7 @@ code {
       </div>
 
       <!-- 熵 -->
-      <div class="explain-card reveal">
+      <div class="explain-card reveal" id="term-entropy">
         <span class="explain-card__term">熵 / 熵減原則</span>
         <p class="explain-card__plain">東西會自然變亂，所以設計時要主動讓它保持簡單</p>
         <div class="explain-card__analogy">
@@ -1167,7 +1228,7 @@ code {
       </div>
 
       <!-- Popper -->
-      <div class="explain-card reveal">
+      <div class="explain-card reveal" id="term-popper">
         <span class="explain-card__term">Popper 證偽主義</span>
         <p class="explain-card__plain">好的想法必須能被「證明是錯的」，不能證明錯的想法沒有價值</p>
         <div class="explain-card__analogy">
@@ -1185,7 +1246,7 @@ code {
       </div>
 
       <!-- Mock -->
-      <div class="explain-card reveal">
+      <div class="explain-card reveal" id="term-mock">
         <span class="explain-card__term">Mock -- 模擬資料</span>
         <p class="explain-card__plain">用假資料代替真實系統來測試，不怕搞壞東西</p>
         <div class="explain-card__analogy">
@@ -1204,7 +1265,7 @@ code {
       </div>
 
       <!-- API -->
-      <div class="explain-card reveal">
+      <div class="explain-card reveal" id="term-api">
         <span class="explain-card__term">API -- 應用程式介面 (Application Programming Interface)</span>
         <p class="explain-card__plain">兩個軟體之間溝通的約定方式</p>
         <div class="explain-card__analogy">
@@ -1223,7 +1284,7 @@ code {
       </div>
 
       <!-- IPC -->
-      <div class="explain-card reveal">
+      <div class="explain-card reveal" id="term-ipc">
         <span class="explain-card__term">IPC -- 行程間通訊 (Inter-Process Communication)</span>
         <p class="explain-card__plain">同一台電腦裡，兩個程式互相傳話的方式</p>
         <div class="explain-card__analogy">
@@ -1771,6 +1832,57 @@ code {
   }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
   document.querySelectorAll('.reveal').forEach(function(el) { obs.observe(el); });
+})();
+
+// 術語點擊跳轉到 glossary
+(function() {
+  var termMap = {
+    'Popper 證偽主義': 'term-popper',
+    'Popper': 'term-popper',
+    '熵減原則': 'term-entropy',
+    '熵減': 'term-entropy',
+    'SDD': 'term-sdd',
+    'Spec-Driven Development': 'term-sdd',
+    'spec': 'term-spec',
+    'Spec': 'term-spec',
+    'TDD': 'term-tdd',
+    'Mock': 'term-mock',
+    'IPC': 'term-ipc'
+  };
+
+  document.querySelectorAll('.term-tip').forEach(function(tip) {
+    if (tip.closest('#glossary')) return;
+
+    var firstText = '';
+    for (var i = 0; i < tip.childNodes.length; i++) {
+      if (tip.childNodes[i].nodeType === 3) {
+        firstText = tip.childNodes[i].textContent.trim();
+        break;
+      }
+    }
+
+    var targetId = null;
+    var keys = Object.keys(termMap);
+    for (var k = 0; k < keys.length; k++) {
+      if (firstText === keys[k] || firstText.indexOf(keys[k]) === 0) {
+        targetId = termMap[keys[k]];
+        break;
+      }
+    }
+
+    if (targetId) {
+      tip.classList.add('term-tip--clickable');
+      tip.addEventListener('click', function(e) {
+        e.preventDefault();
+        var target = document.getElementById(targetId);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          target.classList.add('term-highlight');
+          setTimeout(function() { target.classList.remove('term-highlight'); }, 2000);
+        }
+      });
+    }
+  });
 })();
 </script>
 
