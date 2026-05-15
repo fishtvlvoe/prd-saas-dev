@@ -244,3 +244,161 @@ Any check fails = stop, correct the path or re-propose the SDD change.
 **Solution**: These are not bugs. Deploying to a platform with HTTPS (e.g., Vercel) resolves both issues automatically.
 
 **Lesson**: When testing on iOS, check whether the behavior requires HTTPS before debugging. If testing locally over HTTP, these failures are expected.
+
+---
+
+## CI / Build Pipeline
+
+### PIT-013: Electron + Next.js CI Breaks Native Modules
+
+**Symptom**: `npm ci --ignore-scripts` in CI pipeline. Build fails with "Could not locate the bindings file" for better-sqlite3 (or any native module using prebuild/node-gyp).
+
+**Root Cause**: `--ignore-scripts` blocks ALL postinstall scripts, including native module compilation (better-sqlite3 prebuild) and chromium download (puppeteer). You wanted to skip only chromium, but killed everything.
+
+**Solution**: Remove `--ignore-scripts`. Use targeted environment variables instead:
+
+```bash
+PUPPETEER_SKIP_DOWNLOAD=true PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true npm ci
+```
+
+This skips only the chromium download while allowing native modules to compile normally.
+
+**Lesson**: Be surgical with CI optimizations. Blanket `--ignore-scripts` breaks native dependencies. Use per-package skip flags instead.
+
+---
+
+## React / Frontend Patterns
+
+### PIT-014: React Hook Callback Closure Trap
+
+**Symptom**: Function called inside a hook's callback (`onConnect`, `onOpen`, `onMessage`) silently fails. No error in console. No crash. The function simply does nothing.
+
+**Root Cause**: The callback captures a stale reference to the hook's return value. At the time the callback is created, the hook hasn't finished initializing. The closure holds the initial (empty/noop) version of the method.
+
+```typescript
+// BAD: sendMessage captured before hook initializes
+const { sendMessage } = useWebSocket({
+  onOpen: () => {
+    sendMessage('hello')  // silently fails — stale closure
+  }
+})
+```
+
+**Solution**: Callback should only update state. Use `useEffect` to react to that state change:
+
+```typescript
+const [isConnected, setIsConnected] = useState(false)
+const { sendMessage } = useWebSocket({
+  onOpen: () => setIsConnected(true)  // only update state
+})
+
+useEffect(() => {
+  if (isConnected) {
+    sendMessage('hello')  // now sendMessage is current
+  }
+}, [isConnected, sendMessage])
+```
+
+**Lesson**: Never call hook-returned methods inside hook callbacks. The closure always captures the wrong value. State + useEffect is the safe pattern.
+
+---
+
+## Environment / Deployment
+
+### PIT-015: vercel env add with echo Injects Newline
+
+**Symptom**: API calls fail with mysterious 4xx errors. Environment variable looks correct in dashboard. But the actual stored value has a trailing `\n`.
+
+**Root Cause**: `echo "value"` always appends a newline character. When piped into `vercel env add`, Vercel stores the newline as part of the value.
+
+```bash
+# BAD: stores "fish@example.com\n"
+echo "fish@example.com" | vercel env add FROM_EMAIL production
+```
+
+**Solution**: Use `printf` (no trailing newline) and always verify:
+
+```bash
+# GOOD: stores "fish@example.com" exactly
+printf "fish@example.com" > /tmp/v && vercel env add FROM_EMAIL production < /tmp/v
+
+# VERIFY: pull and check
+vercel env pull /tmp/.env.prod --environment=production
+grep "^FROM_EMAIL=" /tmp/.env.prod
+```
+
+**Lesson**: `echo` always adds a newline. Never pipe `echo` into environment management tools. Use `printf` and verify with `env pull`.
+
+---
+
+## Database
+
+### PIT-016: Postgres CREATE TABLE IF NOT EXISTS Does Not Upgrade Existing Tables
+
+**Symptom**: Migration runs successfully (no errors). But new columns do not appear in the production table.
+
+**Root Cause**: `CREATE TABLE IF NOT EXISTS` is a **no-op** when the table already exists. It does not add, remove, or modify columns. The migration file looks correct but does nothing.
+
+**Solution**: Use explicit ALTER statements for schema evolution:
+
+```sql
+-- Adding columns
+ALTER TABLE processed_emails ADD COLUMN IF NOT EXISTS category TEXT;
+
+-- Modifying constraints
+DO $$ BEGIN
+  ALTER TABLE orders DROP CONSTRAINT IF EXISTS orders_status_check;
+  ALTER TABLE orders ADD CONSTRAINT orders_status_check
+    CHECK (status IN ('pending', 'processing', 'completed', 'cancelled'));
+END $$;
+```
+
+**Verification**: Always check production schema directly before assuming migrations worked:
+
+```bash
+psql $DATABASE_URL -c "\d processed_emails"
+```
+
+**Lesson**: Migration files are not the source of truth for production schema. `CREATE TABLE IF NOT EXISTS` on an existing table is a no-op. Always verify with `\d <table>`.
+
+---
+
+## Desktop Application Security
+
+### PIT-017: OS Keychain for Desktop App API Key Storage
+
+**Context**: Desktop apps (Tauri, Electron) should never store API keys in `.env` files, `localStorage`, or plain config files. Unlike web apps, desktop app files are directly accessible on the user's filesystem.
+
+**Pattern**: Use the operating system's secure credential storage:
+
+| Platform | Backend | Rust Crate | Node.js Package |
+|----------|---------|------------|-----------------|
+| macOS | Keychain | `keyring` | `keytar` |
+| Windows | Credential Manager | `keyring` | `keytar` |
+| Linux | Secret Service (GNOME Keyring) | `keyring` | `keytar` |
+
+**Implementation**:
+
+```rust
+// Rust (Tauri)
+use keyring::Entry;
+
+let entry = Entry::new("my-app", "api-credentials")?;
+entry.set_password(&serde_json::to_string(&credentials)?)?;
+
+// Retrieve
+let stored = entry.get_password()?;
+let credentials: ApiCredentials = serde_json::from_str(&stored)?;
+```
+
+```typescript
+// Node.js (Electron)
+import keytar from 'keytar'
+
+await keytar.setPassword('my-app', 'api-credentials', JSON.stringify(credentials))
+
+const stored = await keytar.getPassword('my-app', 'api-credentials')
+const credentials = JSON.parse(stored)
+```
+
+**Lesson**: Browser security model does not apply to desktop apps. Files on disk are readable by any process. Use OS-level secure storage for secrets.

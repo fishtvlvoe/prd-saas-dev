@@ -17,6 +17,7 @@ All content is derived from battle-tested practices -- not theory.
 | [dev-environment.md](./dev-environment.md) | Three development modes for desktop/hybrid applications | Setting up dev workflow for desktop apps |
 | [decision-tree.md](./decision-tree.md) | Technology selection decision tree | Choosing frameworks, databases, or architecture |
 | [pitfalls.md](./pitfalls.md) | Common SaaS/desktop development pitfalls and solutions | Avoiding known failure modes |
+| [agent-routing.md](./agent-routing.md) | AI agent routing strategy for multi-model development | Dispatching tasks to the right AI model |
 | [templates/native-bridge-template.md](./templates/native-bridge-template.md) | IPC bridge template with dev mock support | Building desktop apps with web frontends |
 | [templates/release-checklist.md](./templates/release-checklist.md) | Pre-release verification checklist | Before any version release |
 
@@ -28,6 +29,7 @@ All content is derived from battle-tested practices -- not theory.
 2. **Starting a new product**: Read `persona-pain-scenario.md`, then `design-principles.md`, then `decision-tree.md`
 3. **Setting up development**: Read `dev-environment.md` and `templates/`
 4. **Debugging or stuck**: Check `pitfalls.md` for known failure patterns
+5. **Using AI to write code**: Read `agent-routing.md` for multi-model dispatch strategy
 
 ---
 

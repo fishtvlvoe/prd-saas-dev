@@ -1404,6 +1404,199 @@ code {
         </div>
       </div>
 
+      <!-- Tauri / Electron -->
+      <div class="explain-card reveal" id="term-tauri">
+        <span class="explain-card__term">Tauri / Electron -- 桌面應用程式框架</span>
+        <p class="explain-card__plain">讓網頁技術變成「可以安裝在電腦上的軟體」的工具。想像你會做網頁，Tauri/Electron 就像一個「外殼」，幫你的網頁穿上一件桌面軟體的外套</p>
+        <div class="explain-card__analogy">
+          <span class="explain-card__analogy-label">比喻</span>
+          Tauri 用 Rust 寫外殼（更輕量），Electron 用 Node.js（更老牌但較肥）
+        </div>
+        <div class="explain-card__diagram">
+          <div class="dia-row">
+            <div class="dia-box">網頁</div>
+            <div class="dia-arrow"></div>
+            <div class="dia-box dia-box--accent">外殼</div>
+            <div class="dia-arrow dia-arrow--accent"></div>
+            <div class="dia-box dia-box--green">桌面軟體</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- React Hook / Closure -->
+      <div class="explain-card reveal" id="term-closure">
+        <span class="explain-card__term">React Hook / Closure（閉包）-- React 的狀態管理機制</span>
+        <p class="explain-card__plain">Hook 是 React 的「記憶力」，讓元件記住資料。Closure 是「函式記住它出生時的環境」。問題是：如果函式記住了「舊的記憶」，就會做出過時的反應</p>
+        <div class="explain-card__analogy">
+          <span class="explain-card__analogy-label">比喻</span>
+          就像你搬家了但朋友還記得你舊地址，寄信到舊家 -- 你永遠收不到
+        </div>
+        <div class="explain-card__diagram">
+          <div class="dia-row">
+            <div class="dia-box dia-box--accent">舊地址</div>
+            <div class="dia-arrow"></div>
+            <div class="dia-box" style="border-style:dashed;">寄信</div>
+            <div class="dia-arrow"></div>
+            <div class="dia-box" style="border-color:var(--red); color:var(--red);">收不到</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CI/CD -->
+      <div class="explain-card reveal" id="term-cicd">
+        <span class="explain-card__term">CI/CD -- 持續整合 / 持續部署 (Continuous Integration / Continuous Deployment)</span>
+        <p class="explain-card__plain">程式碼推到 GitHub 後，機器人自動幫你測試（CI）、自動幫你上架（CD）。不用手動跑測試、手動上傳</p>
+        <div class="explain-card__analogy">
+          <span class="explain-card__analogy-label">比喻</span>
+          就像工廠的自動化流水線 -- 你放原料進去，產品自動包裝出貨
+        </div>
+        <div class="explain-card__diagram">
+          <div class="dia-row">
+            <div class="dia-box">推程式碼</div>
+            <div class="dia-arrow"></div>
+            <div class="dia-box dia-box--accent">自動測試</div>
+            <div class="dia-arrow dia-arrow--accent"></div>
+            <div class="dia-box dia-box--green">自動上架</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Service Worker / Cache -->
+      <div class="explain-card reveal" id="term-sw">
+        <span class="explain-card__term">Service Worker / Cache -- 瀏覽器的離線助手</span>
+        <p class="explain-card__plain">Service Worker 是瀏覽器裡的一個「小管家」，會把你常用的網頁資料存起來（Cache），下次開網頁不用再下載。問題：換了新版本，小管家還在用舊資料</p>
+        <div class="explain-card__analogy">
+          <span class="explain-card__analogy-label">比喻</span>
+          冰箱裡的隔夜菜 -- 你明明煮了新菜，但家人打開冰箱拿到的還是昨天的剩菜
+        </div>
+        <div class="explain-card__diagram">
+          <div class="dia-row">
+            <div class="dia-box">新版網頁</div>
+            <div class="dia-arrow"></div>
+            <div class="dia-box dia-box--accent">小管家</div>
+            <div class="dia-arrow"></div>
+            <div class="dia-box dia-box--dashed">舊版快取</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Agent Routing -->
+      <div class="explain-card reveal" id="term-agent-routing">
+        <span class="explain-card__term">Agent Routing（代理派工）-- AI 輔助開發的任務分配策略</span>
+        <p class="explain-card__plain">用 AI 寫程式時，不是只用一個 AI。便宜的 AI 做簡單工作（讀檔案、跑測試），貴的 AI 做困難工作（架構設計、判斷決策）。就像公司不會叫 CEO 去影印</p>
+        <div class="explain-card__analogy">
+          <span class="explain-card__analogy-label">比喻</span>
+          餐廳分工 -- 主廚設計菜單（貴的 AI），二廚切菜備料（便宜的 AI），洗碗工洗碗（最便宜的 AI）
+        </div>
+        <div class="explain-card__diagram">
+          <div class="dia-row">
+            <div class="dia-box dia-box--accent">主廚</div>
+            <div class="dia-arrow dia-arrow--accent"></div>
+            <div class="dia-box">二廚</div>
+            <div class="dia-arrow"></div>
+            <div class="dia-box" style="border-style:dashed;">洗碗工</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wave -->
+      <div class="explain-card reveal" id="term-wave">
+        <span class="explain-card__term">Wave（執行波）-- SDD 的任務批次執行單位</span>
+        <p class="explain-card__plain">把一堆任務分成幾批，每批叫一個 Wave。同一個 Wave 裡不衝突的任務可以同時做（並行），做完一個 Wave 才做下一個</p>
+        <div class="explain-card__analogy">
+          <span class="explain-card__analogy-label">比喻</span>
+          裝修房子 -- Wave 1 拆牆 + 配管（可以同時做），Wave 2 粉刷（要等 Wave 1 完成），Wave 3 裝家具
+        </div>
+        <div class="explain-card__diagram">
+          <div class="dia-row">
+            <div class="dia-box dia-box--accent">Wave 1</div>
+            <div class="dia-arrow dia-arrow--accent"></div>
+            <div class="dia-box">Wave 2</div>
+            <div class="dia-arrow"></div>
+            <div class="dia-box dia-box--green">Wave 3</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Red/Green Light -->
+      <div class="explain-card reveal" id="term-redgreen">
+        <span class="explain-card__term">Red/Green Light（紅綠燈）-- TDD 的測試狀態</span>
+        <p class="explain-card__plain">紅燈 = 測試失敗（程式壞了或還沒寫）。綠燈 = 測試通過（程式對了）。TDD 的流程是：先故意製造紅燈，寫程式讓紅燈變綠燈，再重構</p>
+        <div class="explain-card__analogy">
+          <span class="explain-card__analogy-label">比喻</span>
+          考試 -- 先出題（紅燈），再寫答案（寫程式），答對就亮綠燈
+        </div>
+        <div class="explain-card__diagram">
+          <div class="dia-lights">
+            <div class="dia-light-unit">
+              <div class="dia-light dia-light--red"></div>
+              <span class="dia-light-label">出題</span>
+            </div>
+            <div class="dia-light-unit">
+              <div class="dia-light dia-light--green"></div>
+              <span class="dia-light-label">答對</span>
+            </div>
+            <div class="dia-light-unit">
+              <div class="dia-light dia-light--yellow"></div>
+              <span class="dia-light-label">整理</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Schema Migration -->
+      <div class="explain-card reveal" id="term-migration">
+        <span class="explain-card__term">Schema Migration -- 資料庫結構升級</span>
+        <p class="explain-card__plain">資料庫的「搬家計畫」。當你的程式需要存新種類的資料（例如加一個「手機號碼」欄位），要寫一份 migration 告訴資料庫「請加這個欄位」</p>
+        <div class="explain-card__analogy">
+          <span class="explain-card__analogy-label">比喻</span>
+          幫書架加一層隔板 -- 你不能把整個書架拆掉重做，只能在現有書架上「改裝」
+        </div>
+        <div class="explain-card__diagram">
+          <div class="dia-row">
+            <div class="dia-box">現有書架</div>
+            <div class="dia-arrow"></div>
+            <div class="dia-box dia-box--accent">加隔板</div>
+            <div class="dia-arrow dia-arrow--accent"></div>
+            <div class="dia-box dia-box--green">新書架</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- OS Keychain -->
+      <div class="explain-card reveal" id="term-keychain">
+        <span class="explain-card__term">OS Keychain -- 作業系統的密碼保險箱</span>
+        <p class="explain-card__plain">Mac 的「鑰匙圈」/ Windows 的「認證管理員」。桌面軟體把 API 密碼存在這裡，比存在設定檔安全得多</p>
+        <div class="explain-card__analogy">
+          <span class="explain-card__analogy-label">比喻</span>
+          銀行保險箱 vs 把現金放抽屜 -- 存抽屜（.env 檔）誰都能翻到，存保險箱（Keychain）要指紋才能開
+        </div>
+        <div class="explain-card__diagram">
+          <div class="dia-row">
+            <div class="dia-box" style="border-color:var(--red); color:var(--red);">抽屜</div>
+            <div style="width:32px; display:flex; align-items:center; justify-content:center; font-size:0.7rem; color:var(--text-dim);">vs</div>
+            <div class="dia-box dia-box--green">保險箱</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Acceptance Criteria -->
+      <div class="explain-card reveal" id="term-ac">
+        <span class="explain-card__term">Acceptance Criteria -- 驗收標準</span>
+        <p class="explain-card__plain">做一個功能前先定義「怎樣算做完」。不是「我覺得好了」，而是「符合這 5 個條件才算完」</p>
+        <div class="explain-card__analogy">
+          <span class="explain-card__analogy-label">比喻</span>
+          裝修合約上的驗收條款 -- 牆壁平不平、油漆均不均、開關通不通電，全部打勾才算完工
+        </div>
+        <div class="explain-card__diagram">
+          <div class="dia-checklist">
+            <div class="dia-check-item"><span class="dia-check-mark"></span>牆壁平整</div>
+            <div class="dia-check-item"><span class="dia-check-mark"></span>油漆均勻</div>
+            <div class="dia-check-item"><span class="dia-check-mark"></span>開關通電</div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
@@ -1963,7 +2156,16 @@ code {
     'Spec': 'term-spec',
     'TDD': 'term-tdd',
     'Mock': 'term-mock',
-    'IPC': 'term-ipc'
+    'IPC': 'term-ipc',
+    'Tauri': 'term-tauri',
+    'Electron': 'term-tauri',
+    'CI/CD': 'term-cicd',
+    'Service Worker': 'term-sw',
+    'Cache': 'term-sw',
+    'Wave': 'term-wave',
+    'Acceptance Criteria': 'term-ac',
+    'Schema Migration': 'term-migration',
+    'Keychain': 'term-keychain'
   };
 
   document.querySelectorAll('.term-tip').forEach(function(tip) {

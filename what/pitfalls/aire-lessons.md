@@ -232,3 +232,127 @@ kimi --print -w src/ -p "重構 X 模組... 只修改 src/ 下的檔案，禁止
 **根因**：iOS Safari 要求 HTTPS 才允許這些 API。
 
 **教訓**：iOS 實機測試這些現象不是 bug，部署到 Vercel（HTTPS）後自動修復。本機測試看到問題先確認是否和 HTTPS 相關。
+
+---
+
+## CI / 打包流程
+
+### AIRE-013：Electron CI native 模組被殺
+
+**問題**：CI 用 `npm ci --ignore-scripts` 加速安裝，結果 better-sqlite3 的 postinstall（prebuild 下載 native binding）也被擋了，build 階段報 "Could not locate the bindings file"。
+
+**根因**：`--ignore-scripts` 連 native 模組的 postinstall 都擋了，不只擋 puppeteer chromium 下載。
+
+**解法**：移除 `--ignore-scripts`，改用環境變數精準擋 chromium：
+
+```bash
+PUPPETEER_SKIP_DOWNLOAD=true PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true npm ci
+```
+
+**教訓**：CI 優化要精準，不要用大砲打蚊子。`--ignore-scripts` 是大砲，環境變數是狙擊槍。
+
+---
+
+## React / 前端模式
+
+### AIRE-014：React hook callback 閉包陷阱
+
+**問題**：在 hook 的 callback（`onConnect`、`onOpen`）裡呼叫 hook 回傳的方法（如 `sendMessage`），靜默失敗。Console 無 error，WebSocket frames 看不到對應 message。
+
+**根因**：閉包抓到初始化未完成的舊值。callback 建立時 hook 還沒初始化完成，閉包持有的是初始版本（空的 / noop 的方法）。
+
+```typescript
+// 錯誤：sendMessage 在 callback 建立時還不是真正的 sendMessage
+const { sendMessage } = useWebSocket({
+  onOpen: () => {
+    sendMessage('hello')  // 靜默失敗
+  }
+})
+```
+
+**解法**：callback 只更新 state，後續動作用 `useEffect` 監聽 state 觸發：
+
+```typescript
+const [isConnected, setIsConnected] = useState(false)
+const { sendMessage } = useWebSocket({
+  onOpen: () => setIsConnected(true)  // 只更新 state
+})
+
+useEffect(() => {
+  if (isConnected) {
+    sendMessage('hello')  // 此時 sendMessage 是最新的
+  }
+}, [isConnected, sendMessage])
+```
+
+**教訓**：hook 回傳的方法不要在 hook 的 callback 裡呼叫——閉包永遠抓到舊值。用 state + useEffect 才安全。
+
+---
+
+## 環境 / 部署
+
+### AIRE-015：vercel env add 帶換行
+
+**問題**：API 莫名 4xx，env 值在 Vercel dashboard 看起來正確，但實際儲存的值結尾有 `\n`。
+
+**根因**：`echo "value"` 自動加換行，Vercel 原樣存入。
+
+```bash
+# 錯誤：存入的是 "fish@example.com\n"
+echo "fish@example.com" | vercel env add FROM_EMAIL production
+```
+
+**解法**：用 `printf`（不加換行），加完用 `vercel env pull` 驗證：
+
+```bash
+# 正確：存入的是 "fish@example.com"
+printf "fish@example.com" > /tmp/v && vercel env add FROM_EMAIL production < /tmp/v
+
+# 驗證
+vercel env pull /tmp/.env.prod --environment=production
+grep "^FROM_EMAIL=" /tmp/.env.prod
+```
+
+**教訓**：`echo` 永遠加換行，env 管理工具別用 echo pipe。用 `printf` 並且每次都驗證。
+
+---
+
+## 資料庫
+
+### AIRE-016：Postgres CREATE TABLE 不升級既有表
+
+**問題**：migration 跑了沒報錯，但新欄位沒出現在 production。
+
+**根因**：`CREATE TABLE IF NOT EXISTS` 在表已存在時是 no-op——不會新增、刪除、修改欄位。migration 檔案看起來對，但什麼都沒做。
+
+**解法**：schema 演進用 ALTER：
+
+```sql
+ALTER TABLE processed_emails ADD COLUMN IF NOT EXISTS category TEXT;
+```
+
+**驗證**：migration 跑完必須去 production 確認：
+
+```bash
+psql $DATABASE_URL -c "\d processed_emails"
+```
+
+**教訓**：migration 檔不等於 production schema。`IF NOT EXISTS` 在既有表上是 no-op，要去 production 用 `\d` 確認真實 schema。
+
+---
+
+## 桌面 App 安全
+
+### AIRE-017：OS Keychain 存 API Key
+
+**情境**：桌面 App（Tauri / Electron）不該把 API key 存在 `.env`、`localStorage` 或明文設定檔。跟 web app 不同，桌面 App 的檔案使用者可以直接打開看。
+
+**模式**：用作業系統的安全憑證儲存：
+
+| 平台 | 後端 | Rust | Node.js |
+|------|------|------|---------|
+| macOS | Keychain | `keyring` crate | `keytar` |
+| Windows | Credential Manager | `keyring` crate | `keytar` |
+| Linux | Secret Service | `keyring` crate | `keytar` |
+
+**教訓**：桌面 App 安全模型不同於瀏覽器。檔案在磁碟上任何 process 都能讀，API key 要用 OS 級保護。
