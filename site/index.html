@@ -1,9 +1,12 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-Hant" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>從哲學角度設計軟體開發</title>
+<script>
+(function(){var t=localStorage.getItem('prd-theme');if(!t){t=window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark'}document.documentElement.setAttribute('data-theme',t)})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
@@ -28,6 +31,17 @@
   --cyan: #00e5ff;
   --mono: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
   --sans: 'Noto Sans TC', system-ui, sans-serif;
+}
+
+[data-theme="light"] {
+  --bg-deep: #f5f5f5;
+  --bg-surface: #ffffff;
+  --bg-card: #ffffff;
+  --border: #e0e0e0;
+  --text-primary: #1a1a1a;
+  --text-secondary: #555;
+  --text-dim: #888;
+  --accent-glow: rgba(255, 77, 0, 0.08);
 }
 
 html { scroll-behavior: smooth; }
@@ -1041,17 +1055,96 @@ code {
     max-width: 240px;
   }
 }
+
+/* ========== THEME TOGGLE ========== */
+.theme-toggle {
+  background: none;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  flex-shrink: 0;
+  transition: border-color 0.2s;
+}
+
+.theme-toggle:hover {
+  border-color: var(--accent);
+}
+
+.theme-toggle svg {
+  width: 16px;
+  height: 16px;
+}
+
+.theme-toggle .icon-sun { display: none; }
+.theme-toggle .icon-moon { display: block; }
+
+[data-theme="light"] .theme-toggle .icon-sun { display: block; }
+[data-theme="light"] .theme-toggle .icon-moon { display: none; }
+
+/* ========== LIGHT MODE OVERRIDES ========== */
+[data-theme="light"] .sticky-nav {
+  background: rgba(245, 245, 245, 0.9);
+  border-bottom-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .hero::before {
+  background: radial-gradient(circle, rgba(255, 77, 0, 0.06) 0%, transparent 70%);
+}
+
+[data-theme="light"] .card:hover { border-color: #ccc; }
+
+[data-theme="light"] .card--accent {
+  background: linear-gradient(135deg, rgba(255,77,0,0.04) 0%, var(--bg-card) 60%);
+}
+
+[data-theme="light"] .compare tr:hover td { background: rgba(0,0,0,0.02); }
+
+[data-theme="light"] .explain-card {
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+[data-theme="light"] .term-tip__text {
+  background: #222;
+  color: #e8e8e8;
+  border-color: var(--accent);
+}
+
+[data-theme="light"] .term-tip__text::after {
+  border-top-color: var(--accent);
+}
+
+[data-theme="light"] .pyramid-level:nth-child(2) {
+  background: #fff3ec;
+}
+
+[data-theme="light"] .pyramid-level:nth-child(3) {
+  background: #e8e8e8;
+  color: #1a1a1a;
+}
+
+[data-theme="light"] .pyramid-level:nth-child(4) {
+  background: #f0f0f0;
+  color: #1a1a1a;
+}
 </style>
 </head>
 <body>
 
 <!-- ==================== STICKY NAV ==================== -->
 <nav class="sticky-nav">
-  <div class="container" style="display:flex; gap:12px; flex-wrap:wrap;">
+  <div class="container" style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
     <a href="#glossary">術語翻譯</a>
     <a href="#why">WHY</a>
     <a href="#how">HOW</a>
     <a href="#what">WHAT</a>
+    <button class="theme-toggle" type="button" aria-label="切換淺色/深色模式" title="切換淺色/深色模式">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
   </div>
 </nav>
 
@@ -1818,6 +1911,20 @@ code {
 </footer>
 
 <!-- ==================== SCROLL REVEAL ==================== -->
+<script>
+// 主題切換
+(function() {
+  var btn = document.querySelector('.theme-toggle');
+  if (!btn) return;
+  btn.addEventListener('click', function() {
+    var current = document.documentElement.getAttribute('data-theme');
+    var next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('prd-theme', next);
+  });
+})();
+</script>
+
 <script>
 (function() {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
