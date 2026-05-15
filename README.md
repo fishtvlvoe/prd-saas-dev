@@ -63,11 +63,12 @@ prd-saas-dev/
 │   ├── why-local-dev.md         為什麼要消除打包等待
 │   └── why-st-foundation.md     為什麼用 Supastarter 作為 SaaS 底層
 ├── how/                     原始素材：工作流程與決策方法（中文）
-│   ├── reverse-engineering.md   逆向拆解法
-│   ├── sdd-workflow.md          Spectra 完整工作流
-│   ├── decision-tree.md         技術選型決策樹
-│   ├── testing-strategy.md      三層測試策略
-│   └── dev-environment.md       開發環境三模式
+│   ├── reverse-engineering.md       逆向拆解法
+│   ├── sdd-workflow.md              Spectra 完整工作流
+│   ├── decision-tree.md             技術選型決策樹
+│   ├── testing-strategy.md          三層測試策略
+│   ├── dev-environment.md           開發環境三模式
+│   └── client-opportunity-mapping.md 客戶痛點對應自有資產的方法論
 └── what/                    原始素材：具體產出與參考（中文）
     ├── architecture/            技術架構
     ├── pitfalls/                踩坑紀錄
