@@ -105,3 +105,19 @@ $parentOrderIds = $orderItems->pluck('order.id')
 - Eloquent Collection 操作鏈不要中途切換到 PHP 原生 array — 要嘛全 collection（pluck/map/filter），要嘛先 `->toArray()` 再用 array_* + 陣列存取（`$item['order']['id']`）
 - 單元測試直接 mock collection 物件，沒打到「真實 toArray」路徑 → 漏抓。整合測試或線上實機驗收才是把關
 - PHP 8 起，**任何 array vs object 存取錯誤都會 raise warning 但繼續執行**，造成 silent failure；error_log 一定要看
+
+---
+
+## BUYGO-006：改 REST API 行為時只追 service caller 不夠，必須從前端 URL 往後 trace
+
+**問題**：fix-shipment-details-expand-variations（v1.7.11）改了 `ShipmentService::get_shipment_items()` 加 LEFT JOIN `fct_product_variations`，PR merged + 部署、wp eval 跑 service 直接 OK、單元測試 351/351 全綠。但實際打開出貨明細 UI 仍不顯示子列。
+
+**根因**：前端 `useShipmentDetails.js::loadShipment(id)` 打的是 `/shipments/{id}/detail` endpoint，不是 `/shipments/{id}`。前者走 `Shipments_API::get_shipment_detail()` 含**獨立 inline SQL**（不呼叫 service）；後者走 `get_shipment` 才呼叫 `ShipmentService::get_shipment_items()`。改了後者，前者沒動 → 前端拿不到 variation 欄位 → `mergeItemsByProduct` 算出 subItems 全 variation_id=null 被合併成 1 個 → length=1 → 子列不渲染。
+
+**解法**：開 hotfix v1.7.12 (PR #16)，把 `get_shipment_detail()` 內的 inline SQL 也加 LEFT JOIN `fct_product_variations` 拉 variation 三欄位。
+
+**教訓**：
+- Cross-impact 預檢只 grep service method caller 不夠。**MUST 加一步：從前端打的 URL 往後 trace** — `grep "fetch.*shipments"` / `grep "/shipments/.*}/detail"` 找實際被呼叫的 REST endpoint URL → 對應 controller method → 改對 handler。
+- WordPress REST API 經常有「list endpoint vs detail endpoint」兩條獨立 SQL（為了 detail 多帶 customer 資訊或其他 JOIN）。改 list 不會影響 detail。
+- 單元測試用 mock $wpdb 直接打 service method，這條路 100% 過。但實際 production 用戶走的是 REST endpoint。**驗收 MUST 用真實 endpoint**（curl / 瀏覽器網頁 / Chrome MCP）不能只信單元測試。
+- L079 已補強規則：「改 REST API 行為前 MUST 從前端往後 trace 確認改對 handler」。
