@@ -356,3 +356,61 @@ psql $DATABASE_URL -c "\d processed_emails"
 | Linux | Secret Service | `keyring` crate | `keytar` |
 
 **教訓**：桌面 App 安全模型不同於瀏覽器。檔案在磁碟上任何 process 都能讀，API key 要用 OS 級保護。
+
+---
+
+### AIRE-018：@react-pdf 的 Blob 在 Vitest 轉成 hex，在 browser 卻變成無效 PDF
+
+**問題**：PDF 預覽頁 iframe 顯示「無法載入 PDF 文件」，但 React 元件沒有報錯（status 是 ready）。
+
+**根因**：`engine.ts` 有個 `toUtf8SafePdfBlob()` 函數，把 PDF 二進位轉成 hex 字串（`%PDF-\n<hex bytes>`），是為了讓 Vitest 的 `Blob.text()` 能正確解碼。這段轉換在所有環境都跑，不只是測試環境，導致 browser 拿到的 blob 是 hex 文字，不是有效的 PDF binary。
+
+**症狀**：Chrome PDF viewer（iframe 內）顯示「無法載入 PDF 文件。重新載入」，但 React 的 `status === "error"` 沒有觸發，因為 blob 確實有建立，只是內容無效。
+
+**解法**：
+
+```typescript
+// engine.ts — 只在 Vitest 環境執行 hex 轉換
+const isVitest = typeof process !== "undefined" && !!process.env["VITEST"];
+return isVitest ? await toUtf8SafePdfBlob(blob) : blob;
+```
+
+**教訓**：測試相容性 hack（Vitest blob 解碼）不能直接放在 production code path，必須用環境判斷隔離。每次看到「只為了測試能過而改的 production code」都要打問號。
+
+---
+
+### AIRE-019：Tauri-only API 在 browser dev mode 直接炸（saveDialog / invoke）
+
+**問題**：點「下載 PDF」按鈕，出現 `PDF 預覽失敗（DOWNLOAD_FAILURE）` toast，同時 Next.js error overlay 顯示 `Cannot read properties of undefined (reading 'invoke')`。
+
+**根因**：`PdfPreviewer.tsx` 的 `handleDownload` 呼叫了 `saveDialog`（來自 `@tauri-apps/plugin-dialog`）和 `invoke("write_file")`。這兩個 API 在 Tauri runtime 才有，瀏覽器 dev mode 下 `window.__TAURI__` 不存在，呼叫直接丟 TypeError。
+
+**解法**：
+
+```typescript
+const handleDownload = useCallback(async () => {
+  if (!latestBlobRef.current) return;
+  try {
+    const inTauri = typeof (window as typeof window & { __TAURI__?: unknown }).__TAURI__ !== "undefined";
+
+    if (!inTauri) {
+      // Browser dev mode：用原生 <a> 下載
+      const url = URL.createObjectURL(latestBlobRef.current);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${caseId || "AIRE"}.pdf`;
+      a.click();
+      URL.revokeObjectURL(url);
+      return;
+    }
+
+    // Tauri 環境：走 native file dialog
+    const chosenPath = await saveDialog({ ... });
+    await invoke("write_file", { path: chosenPath, bytes: ... });
+  } catch (err) { ... }
+}, [caseId]);
+```
+
+**通用模式**：任何 Tauri-only API（`invoke`、`saveDialog`、`openDialog` 等）使用前都要先判斷 `window.__TAURI__`，並提供 browser fallback。
+
+**教訓**：`safeInvoke` 只包了 Tauri command invoke，plugin API（`@tauri-apps/plugin-dialog` 等）沒有 safe wrapper，要自己加 `__TAURI__` 判斷。每個用到 `@tauri-apps/plugin-*` 的地方都是潛在 browser crash 點。
