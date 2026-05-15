@@ -1,8 +1,16 @@
 # PRD SaaS 開發知識庫
 
-這個知識庫解決一個問題：把「Fish 為什麼這樣做事」變成可傳遞的結構，讓 AI 協作者、未來的自己、以及任何接手這個方向的人，都能快速對齊思維框架，不用重新問一遍「為什麼」。
+用哲學角度設計軟體開發 — 從「為什麼」出發，通用於任何 SaaS 產品或 AI Agent 系統。
 
-知識庫以 AIRE（不動產說明書自動化桌面 App）作為主要實例，但所有觀念對其他 SaaS / 桌面 App 同樣適用。
+這份知識庫有兩種閱讀方式：
+
+### 給人看 — 視覺化 Landing Page
+
+**[打開 Landing Page](site/index.html)** — 單頁網頁，所有專業術語都有白話翻譯 + 生活比喻 + 圖解（費曼學習法）。沒有工程背景也能讀懂。
+
+### 給 AI 看 — 英文實作指南
+
+**[打開 AI Guide](ai-guide/README.md)** — 10 份英文文件，結構化的 step-by-step 格式。AI agent（Claude / Codex / GPT）讀完可以直接照做，不需要人類翻譯。
 
 ---
 
@@ -31,39 +39,52 @@ What（具體做了什麼）
 
 ```
 prd-saas-dev/
-├── why/                     設計哲學與動機
-│   ├── design-philosophy.md     Fish 的設計哲學核心（工具觀）
-│   ├── entropy-reduction.md     熵減 vs 熵增（為什麼「少」比「多」更難）
+├── site/                    給人看（視覺化網頁）
+│   └── index.html               單頁 Landing Page，費曼學習法解釋所有術語
+│
+├── ai-guide/                給 AI 看（英文實作指南）
+│   ├── README.md                索引與閱讀順序
+│   ├── sdd-workflow.md          SDD 完整工作流（step-by-step）
+│   ├── tdd-pattern.md           TDD 紅綠燈模式
+│   ├── persona-pain-scenario.md 需求分析框架
+│   ├── design-principles.md     設計原則清單
+│   ├── dev-environment.md       三種開發模式設定指南
+│   ├── decision-tree.md         技術選型決策樹
+│   ├── pitfalls.md              通用 SaaS / 桌面應用踩坑清單
+│   └── templates/               可複用的程式碼模板與檢查清單
+│
+├── why/                     原始素材：設計哲學與動機（中文）
+│   ├── design-philosophy.md     工具觀核心
+│   ├── entropy-reduction.md     熵減 vs 熵增
 │   ├── persona-pain-scenario.md 人群→痛點→場景→需求框架
-│   ├── problem-validation.md    可驗偽的思維流程（Popper 在商業的應用）
+│   ├── problem-validation.md    可驗偽的思維流程（Popper）
 │   ├── why-sdd.md               為什麼先寫 spec 再寫 code
 │   ├── why-tdd.md               為什麼先寫測試再寫實作
-│   ├── why-local-dev.md         為什麼要消除打包等待（mock backend 的動機）
+│   ├── why-local-dev.md         為什麼要消除打包等待
 │   └── why-st-foundation.md     為什麼用 Supastarter 作為 SaaS 底層
-├── how/                     工作流程與決策方法
-│   ├── reverse-engineering.md   逆向拆解法（市場→技術選型）
+├── how/                     原始素材：工作流程與決策方法（中文）
+│   ├── reverse-engineering.md   逆向拆解法
 │   ├── sdd-workflow.md          Spectra 完整工作流
 │   ├── decision-tree.md         技術選型決策樹
 │   ├── testing-strategy.md      三層測試策略
 │   └── dev-environment.md       開發環境三模式
-└── what/                    具體產出與參考
-    ├── architecture/
-    │   └── tauri-nextjs-stack.md    技術架構（含 IPC 命令清冊）
-    ├── pitfalls/
-    │   └── aire-lessons.md          踩坑紀錄（SaaS / 桌面 App 相關）
-    ├── templates/
-    │   └── tauri-bridge-template.md tauri-bridge.ts 通用模板
-    └── checklists/
-        └── release-checklist.md     打包前檢查清單
+└── what/                    原始素材：具體產出與參考（中文）
+    ├── architecture/            技術架構
+    ├── pitfalls/                踩坑紀錄
+    ├── templates/               程式碼模板
+    └── checklists/              檢查清單
 ```
 
 ---
 
 ## 給誰用
 
-- **AI 協作者（Claude/Copilot）**：每個 session 開始可以讀 `why/` 目錄建立哲學底層，再讀 `how/` 理解工作流，執行 `what/` 的具體工作。
-- **未來的自己**：忘了「為什麼這樣決定」的時候，先查這裡，不要憑記憶猜。
-- **接手專案的人**：從 `why/design-philosophy.md` 開始讀，順著邏輯鏈往下。
+| 讀者 | 從哪裡開始 |
+|------|-----------|
+| **完全不懂程式的人** | 打開 `site/index.html`，從術語翻譯站開始 |
+| **AI agent** | 讀 `ai-guide/README.md`，按索引順序執行 |
+| **開發者（人類）** | 讀 `why/design-philosophy.md`，順著黃金圈邏輯鏈往下 |
+| **未來的自己** | 忘了「為什麼這樣決定」→ 查 `why/`；忘了「怎麼做」→ 查 `how/` |
 
 ---
 
