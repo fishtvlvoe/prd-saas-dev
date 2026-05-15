@@ -18,6 +18,59 @@ Do not start from "what does the client need." Start from "what we already have 
 
 ---
 
+## Four-Dimension Pre-Check (Run Every Time, Skipping = Pivot Hell)
+
+Distilled from a real case with 4 wrong-direction pivots (see `pitfalls.md` — Client Discovery 4 Pivots). Before proposing any MVP, pass these four checks:
+
+### Dimension 1: Who pays?
+
+The payer is the real customer. The user is often not the payer.
+
+| Context | Apparent customer | Real customer (payer) |
+|---------|-------------------|-----------------------|
+| Cram school | Children | Parents |
+| B2B SaaS | End users | Procurement / boss |
+| Pet products | Pet | Owner |
+| Children's toys | Kid | Parents / grandparents |
+
+Check: Does the solution solve the payer's pain? Solving the user's need but the payer feels nothing → no purchase.
+
+### Dimension 2: Pleasure point vs Pain point
+
+| Type | When used | When not used | Example |
+|------|-----------|---------------|---------|
+| Pleasure point | Happy, will share | Nothing happens | Result video, cute animation |
+| Pain point | Anxiety relief, can sleep | Persistent anxiety → finds competitor | AI emotional companion, instant relief |
+
+Rule: MVP main dish must be a pain killer. Pleasure points can be side dishes (amplify spread) but never the core sell.
+
+Anti-pattern: Selling "child speaking English video" as main MVP. That's a pleasure point — parents feel good momentarily but the core anxiety about "my child's English" is untouched.
+
+### Dimension 3: Friction check
+
+Customers pay to outsource hassle. A solution that adds hassle back = inverted logic.
+
+| Friction level | Example | Will buy? |
+|---------------|---------|-----------|
+| Zero | Passive LINE push | ✅ |
+| Low | Voluntary click when curious | ✅ |
+| Mid | 10 min weekly cooperation | ⚠️ Depends on value |
+| High | Daily task to perform | ❌ Cancellation |
+
+Anti-pattern: "Every-night parent-child English task" — parents send kids to cram school precisely to outsource this. Throwing it back at them = no buy + complaints.
+
+Check: If I were the payer, does this add to my burden?
+
+### Dimension 4: External research mandatory
+
+Run external research (Perplexity, client interviews, public community discussions) before guessing pain points.
+
+Anti-pattern: Assuming "teaching quality is the cram school's pain" based on stereotypes. A franchise cram school often has teaching covered by HQ — the real pain is enrollment/marketing.
+
+SOP: Stage 1 of `client-discovery-workflow.md` is mandatory. Skipping = the start of consecutive pivots.
+
+---
+
 ## Five-Step Procedure
 
 ### Step 1: Filter pain points
