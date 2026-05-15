@@ -73,7 +73,8 @@ prd-saas-dev/
 │   ├── dev-environment.md           開發環境三模式
 │   ├── client-discovery-workflow.md 客戶發掘工作流（Fish + Claude 分工）
 │   ├── client-opportunity-mapping.md 客戶痛點對應自有資產的方法論
-│   └── emotional-value-design.md    情緒價值設計法（神經遞質視角）
+│   ├── emotional-value-design.md    情緒價值設計法（神經遞質視角）
+│   └── right-people-not-right-problems.md 先找對的人，不是找對的問題（客戶篩選法）
 └── what/                    原始素材：具體產出與參考（中文）
     ├── architecture/            技術架構
     ├── pitfalls/                踩坑紀錄
