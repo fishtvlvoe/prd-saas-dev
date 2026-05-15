@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>從哲學角度設計軟體開發</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+/* ========== RESET & BASE ========== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-deep: #0a0a0a;
+  --bg-surface: #111111;
+  --bg-card: #1a1a1a;
+  --border: #2a2a2a;
+  --text-primary: #e8e8e8;
+  --text-secondary: #999;
+  --text-dim: #666;
+  --accent: #ff4d00;
+  --accent-dim: #cc3d00;
+  --accent-glow: rgba(255, 77, 0, 0.15);
+  --green: #00c853;
+  --red: #ff1744;
+  --yellow: #ffd600;
+  --cyan: #00e5ff;
+  --mono: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  --sans: 'Noto Sans TC', system-ui, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--sans);
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ========== LAYOUT ========== */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+section {
+  padding: 100px 0;
+  position: relative;
+}
+
+/* ========== TYPOGRAPHY ========== */
+h1 { font-size: clamp(2.4rem, 6vw, 4.2rem); font-weight: 900; line-height: 1.15; letter-spacing: -0.03em; }
+h2 { font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 700; line-height: 1.25; letter-spacing: -0.02em; }
+h3 { font-size: clamp(1.1rem, 2vw, 1.4rem); font-weight: 700; line-height: 1.35; }
+p { font-size: 1rem; color: var(--text-secondary); }
+
+.section-label {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+  display: block;
+}
+
+.section-title {
+  margin-bottom: 20px;
+}
+
+.section-desc {
+  max-width: 640px;
+  margin-bottom: 64px;
+  font-size: 1.05rem;
+}
+
+/* ========== HERO ========== */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding: 120px 0 80px;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -20%;
+  right: -10%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-content { position: relative; z-index: 1; }
+
+.hero h1 {
+  margin-bottom: 24px;
+}
+
+.hero h1 .accent { color: var(--accent); }
+
+.hero-sub {
+  font-size: clamp(1.1rem, 2vw, 1.35rem);
+  color: var(--text-secondary);
+  max-width: 580px;
+  margin-bottom: 48px;
+  font-weight: 300;
+}
+
+.hero-nav {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.hero-nav a {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  text-decoration: none;
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  transition: all 0.2s;
+}
+
+.hero-nav a:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* ========== GRID LAYOUTS ========== */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 768px) {
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+}
+
+/* ========== CARDS ========== */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 32px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.card:hover { border-color: #444; }
+
+.card-number {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  margin-bottom: 16px;
+  display: block;
+}
+
+.card h3 { margin-bottom: 12px; }
+
+.card p { font-size: 0.9rem; line-height: 1.65; }
+
+.card--accent {
+  border-color: var(--accent);
+  background: linear-gradient(135deg, rgba(255,77,0,0.05) 0%, var(--bg-card) 60%);
+}
+
+/* ========== PHILOSOPHY PYRAMID ========== */
+.pyramid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin: 64px 0;
+}
+
+.pyramid-level {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  position: relative;
+  transition: transform 0.2s;
+}
+
+.pyramid-level:hover { transform: scale(1.02); }
+
+.pyramid-level:nth-child(1) {
+  width: 220px;
+  background: var(--accent);
+  color: #fff;
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+  padding-top: 40px;
+}
+
+.pyramid-level:nth-child(2) {
+  width: 360px;
+  background: #2a1a0a;
+  border: 1px solid var(--accent-dim);
+  color: var(--accent);
+}
+
+.pyramid-level:nth-child(3) {
+  width: 500px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+}
+
+.pyramid-level:nth-child(4) {
+  width: 640px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+
+@media (max-width: 700px) {
+  .pyramid-level:nth-child(1) { width: 60%; }
+  .pyramid-level:nth-child(2) { width: 75%; }
+  .pyramid-level:nth-child(3) { width: 88%; }
+  .pyramid-level:nth-child(4) { width: 100%; }
+}
+
+/* ========== FLOW DIAGRAM ========== */
+.flow {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  margin: 48px 0;
+  position: relative;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.flow-step {
+  flex: 1;
+  min-width: 140px;
+  padding: 28px 20px;
+  text-align: center;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  position: relative;
+}
+
+.flow-step::after {
+  content: '';
+  position: absolute;
+  right: -13px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-left: 12px solid var(--border);
+  z-index: 1;
+}
+
+.flow-step:last-child::after { display: none; }
+
+.flow-step-num {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 8px;
+}
+
+.flow-step-title {
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+}
+
+.flow-step-desc {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+.flow-step--active {
+  border-color: var(--accent);
+  background: rgba(255,77,0,0.05);
+}
+
+@media (max-width: 768px) {
+  .flow { flex-direction: column; gap: 2px; }
+  .flow-step::after {
+    right: 50%;
+    top: auto;
+    bottom: -13px;
+    transform: translateX(50%);
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 12px solid var(--border);
+  }
+}
+
+/* ========== COMPARISON TABLE ========== */
+.compare {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 48px 0;
+  font-size: 0.9rem;
+}
+
+.compare th {
+  text-align: left;
+  padding: 14px 20px;
+  font-weight: 700;
+  border-bottom: 2px solid var(--border);
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+}
+
+.compare th:first-child { color: var(--text-dim); }
+.compare th:nth-child(2) { color: var(--red); }
+.compare th:nth-child(3) { color: var(--green); }
+
+.compare td {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  vertical-align: top;
+}
+
+.compare tr:hover td { background: rgba(255,255,255,0.02); }
+
+/* ========== TDD LIGHTS ========== */
+.tdd-flow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin: 48px 0;
+}
+
+.tdd-phase {
+  padding: 28px 20px;
+  text-align: center;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+}
+
+.tdd-light {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tdd-light--red { background: var(--red); box-shadow: 0 0 20px rgba(255,23,68,0.4); }
+.tdd-light--green { background: var(--green); box-shadow: 0 0 20px rgba(0,200,83,0.4); }
+.tdd-light--yellow { background: var(--yellow); box-shadow: 0 0 20px rgba(255,214,0,0.3); }
+.tdd-light--blue { background: var(--cyan); box-shadow: 0 0 20px rgba(0,229,255,0.3); }
+
+.tdd-phase h3 { font-size: 0.9rem; margin-bottom: 8px; }
+.tdd-phase p { font-size: 0.78rem; color: var(--text-dim); }
+
+@media (max-width: 768px) {
+  .tdd-flow { grid-template-columns: 1fr 1fr; }
+}
+
+/* ========== REVERSE TREE ========== */
+.tree {
+  margin: 48px 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.tree li {
+  position: relative;
+  padding: 12px 0 12px 32px;
+  border-left: 2px solid var(--border);
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.tree li::before {
+  content: '';
+  position: absolute;
+  left: -5px;
+  top: 18px;
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+}
+
+.tree li strong { color: var(--text-primary); }
+
+.tree .tree-sub {
+  margin-top: 8px;
+  padding-left: 24px;
+  list-style: none;
+}
+
+.tree .tree-sub li {
+  border-left: 2px solid #333;
+  font-size: 0.82rem;
+  padding: 6px 0 6px 24px;
+}
+
+.tree .tree-sub li::before {
+  width: 6px;
+  height: 6px;
+  background: var(--text-dim);
+  left: -4px;
+  top: 12px;
+}
+
+/* ========== DECISION TREE ========== */
+.dtree {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 48px 0;
+}
+
+.dtree-node {
+  display: flex;
+  align-items: stretch;
+  gap: 2px;
+}
+
+.dtree-q {
+  flex: 0 0 50%;
+  padding: 20px 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+
+.dtree-a {
+  flex: 1;
+  padding: 20px 24px;
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+}
+
+.dtree-a--yes { background: rgba(0,200,83,0.05); border-color: rgba(0,200,83,0.2); color: var(--green); }
+.dtree-a--no { background: rgba(255,23,68,0.05); border-color: rgba(255,23,68,0.2); color: var(--red); }
+
+@media (max-width: 600px) {
+  .dtree-node { flex-direction: column; }
+  .dtree-q { flex: auto; }
+}
+
+/* ========== THREE MODES ========== */
+.modes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin: 48px 0;
+}
+
+.mode-card {
+  padding: 32px 24px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  text-align: center;
+}
+
+.mode-icon {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--accent);
+  padding: 6px 14px;
+  border: 1px solid var(--accent);
+  display: inline-block;
+  margin-bottom: 20px;
+}
+
+.mode-card h3 { margin-bottom: 8px; font-size: 1rem; }
+.mode-card .mode-time { font-family: var(--mono); font-size: 0.8rem; color: var(--green); margin-bottom: 12px; }
+.mode-card p { font-size: 0.82rem; color: var(--text-dim); }
+
+@media (max-width: 768px) {
+  .modes { grid-template-columns: 1fr; }
+}
+
+/* ========== WHAT SECTION ========== */
+.output-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin: 48px 0;
+}
+
+.output-item {
+  padding: 28px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+}
+
+.output-tag {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.output-item h3 { font-size: 0.95rem; margin-bottom: 8px; }
+.output-item p { font-size: 0.82rem; color: var(--text-dim); line-height: 1.6; }
+
+@media (max-width: 600px) {
+  .output-grid { grid-template-columns: 1fr; }
+}
+
+/* ========== FOOTER ========== */
+footer {
+  padding: 60px 0;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+
+footer a {
+  color: var(--accent);
+  text-decoration: none;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  padding: 12px 24px;
+  border: 1px solid var(--accent);
+  display: inline-block;
+  transition: all 0.2s;
+}
+
+footer a:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+footer p {
+  margin-top: 24px;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+/* ========== DIVIDERS ========== */
+.divider {
+  width: 100%;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ========== PERSONA SCENARIOS ========== */
+.persona-strip {
+  display: flex;
+  gap: 2px;
+  margin: 48px 0;
+  overflow-x: auto;
+}
+
+.persona {
+  flex: 1;
+  min-width: 240px;
+  padding: 28px 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+}
+
+.persona-role {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--accent);
+  margin-bottom: 12px;
+  display: block;
+}
+
+.persona h3 { font-size: 0.95rem; margin-bottom: 8px; }
+
+.persona-pain {
+  font-size: 0.82rem;
+  color: var(--red);
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.persona-need {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+
+@media (max-width: 768px) {
+  .persona-strip { flex-direction: column; }
+}
+
+/* ========== ENGINE TABLE ========== */
+.engine-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+  margin: 48px 0;
+}
+
+.engine-cell {
+  padding: 20px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  text-align: center;
+}
+
+.engine-cell strong {
+  display: block;
+  font-size: 0.85rem;
+  margin-bottom: 6px;
+}
+
+.engine-cell span {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .engine-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* ========== SCROLL ANIMATION ========== */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; }
+}
+
+/* ========== INLINE CODE ========== */
+code {
+  font-family: var(--mono);
+  font-size: 0.82em;
+  background: var(--bg-card);
+  padding: 2px 8px;
+  border: 1px solid var(--border);
+  color: var(--accent);
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== HERO ==================== -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <h1>
+        從<span class="accent">哲學角度</span><br>
+        設計軟體開發
+      </h1>
+      <p class="hero-sub">
+        用 Popper 證偽主義取代瀑布式開發。用熵減原則取代功能堆積。用血清素設計取代多巴胺陷阱。這是一份關於「為什麼這樣做」的完整紀錄。
+      </p>
+      <nav class="hero-nav">
+        <a href="#why">WHY</a>
+        <a href="#how">HOW</a>
+        <a href="#what">WHAT</a>
+      </nav>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== WHY ==================== -->
+<section id="why">
+  <div class="container">
+    <span class="section-label reveal">01 / Why</span>
+    <h2 class="section-title reveal">為什麼先問問題，不是先寫程式碼</h2>
+    <p class="section-desc reveal">
+      大多數軟體專案失敗，不是因為寫錯程式碼，而是因為解錯問題。設計哲學的核心：讓每個決策都能回溯到同一個根基 ── 使用者在使用工具的過程中，感受到被尊重、被理解。
+    </p>
+
+    <!-- Inside-out 金字塔 -->
+    <div class="reveal">
+      <h3 style="text-align:center; margin-bottom:8px; color:var(--text-dim); font-size:0.85rem;">Inside-out：由內而外的設計順序</h3>
+      <div class="pyramid">
+        <div class="pyramid-level">WHY</div>
+        <div class="pyramid-level">WHAT</div>
+        <div class="pyramid-level">HOW</div>
+        <div class="pyramid-level">TOOL / CODE / UI</div>
+      </div>
+      <p style="text-align:center; font-size:0.82rem; color:var(--text-dim); max-width:500px; margin:0 auto;">
+        先問存在目的，再定義功能，最後設計實作。逆向也要通：從實作追溯到使用者痛點，追不通就是設計有問題。
+      </p>
+    </div>
+
+    <!-- 四大原則 -->
+    <div class="grid-2 reveal" style="margin-top:64px;">
+      <div class="card card--accent">
+        <span class="card-number">01</span>
+        <h3>熵減原則</h3>
+        <p>熵增是自然狀態 ── 功能越加越多、介面越來越複雜。熵減是主動選擇：每個元素加進來之前問「它的職責是什麼」，職責不清楚就不加。不做什麼和做什麼一樣重要。</p>
+      </div>
+      <div class="card">
+        <span class="card-number">02</span>
+        <h3>外化元框架</h3>
+        <p>使用者隨時知道三件事：現在在哪、下一步是什麼、出錯了怎麼辦。做到了，使用者就有掌控感。掌控感帶來的是血清素 ── 穩定、安定、不焦慮。</p>
+      </div>
+      <div class="card">
+        <span class="card-number">03</span>
+        <h3>血清素設計</h3>
+        <p>讓人用完安心離開，不靠上癮留人。工具完成任務，使用者繼續生活。不設計「再來一次」的鉤子，不用通知轟炸、進度條綁架、無限等級誘惑。</p>
+      </div>
+      <div class="card">
+        <span class="card-number">04</span>
+        <h3>失敗即 Log</h3>
+        <p>失敗不是身份宣判，是調試紀錄。使用者做錯了，介面說「這樣試試」，不說「你錯了」。開發踩坑了，記進 lessons.md，下次不再踩。失敗是學習的原材料。</p>
+      </div>
+    </div>
+
+    <!-- 問題驗偽 -->
+    <div class="reveal" style="margin-top:80px;">
+      <h3 style="margin-bottom:12px;">問題是假說，不是事實</h3>
+      <p style="max-width:640px; margin-bottom:32px;">
+        受 Popper 證偽主義啟發：一個問題只有在「能被證明是假的」時，才值得投入資源解決。不找支持自己的證據，找能推翻自己的證據。
+      </p>
+
+      <table class="compare">
+        <thead>
+          <tr>
+            <th style="width:40%;">步驟</th>
+            <th style="width:30%;">錯誤方式</th>
+            <th style="width:30%;">證偽方式</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>定義問題</td>
+            <td>「使用者需要更好的工具」</td>
+            <td>「使用者平均花 2 小時做 X，願意付 Y 解決」</td>
+          </tr>
+          <tr>
+            <td>找證據</td>
+            <td>問「你覺得這麻煩嗎」</td>
+            <td>問「上次做這件事花了多久」</td>
+          </tr>
+          <tr>
+            <td>判斷</td>
+            <td>使用者說「好像有用」</td>
+            <td>找到會推翻假設的條件，逐一排除</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 熵減對比 -->
+    <div class="reveal" style="margin-top:80px;">
+      <h3 style="margin-bottom:12px;">熵減 vs 熵增：兩種產品命運</h3>
+      <p style="max-width:640px; margin-bottom:32px;">
+        面對任何「要不要加」的決策，問三個問題：它的職責是什麼？不加它會怎樣？加了之後誰來維護？三個都答不清楚 ── 先不加。
+      </p>
+
+      <table class="compare">
+        <thead>
+          <tr>
+            <th></th>
+            <th>熵增思維</th>
+            <th>熵減思維</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>功能</strong></td>
+            <td>加功能讓產品更強</td>
+            <td>只加解決真實痛點的功能</td>
+          </tr>
+          <tr>
+            <td><strong>需求</strong></td>
+            <td>使用者說要就加</td>
+            <td>先挖真正的需求</td>
+          </tr>
+          <tr>
+            <td><strong>程式碼</strong></td>
+            <td>越複雜說明越聰明</td>
+            <td>越簡單越難被破壞</td>
+          </tr>
+          <tr>
+            <td><strong>文件</strong></td>
+            <td>事後補（通常省略）</td>
+            <td>文件是設計的一部分</td>
+          </tr>
+          <tr>
+            <td><strong>依賴</strong></td>
+            <td>多 = 功能強</td>
+            <td>多 = 維護成本高</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 工具觀 -->
+    <div class="reveal" style="margin-top:80px;">
+      <h3 style="margin-bottom:24px;">工具配合人，不是人配合工具</h3>
+      <p style="max-width:640px; margin-bottom:32px;">
+        大多數工具的邏輯：「工具提供功能，人去學怎麼用。」這裡的邏輯反過來：先問這個人實際在做什麼，再決定工具長什麼樣。
+      </p>
+    </div>
+
+    <!-- 人群痛點場景 -->
+    <div class="reveal" style="margin-top:80px;">
+      <h3 style="margin-bottom:12px;">人群 ── 痛點 ── 場景</h3>
+      <p style="max-width:640px; margin-bottom:32px;">
+        在「感覺有個好點子」和「確認值得做」之間，走一條可驗證的思考路徑。每一步都必須能說清楚「為什麼」，不能跳步驟。
+      </p>
+
+      <div class="flow">
+        <div class="flow-step">
+          <span class="flow-step-num">01</span>
+          <div class="flow-step-title">人群</div>
+          <div class="flow-step-desc">具體的人，不是抽象的市場</div>
+        </div>
+        <div class="flow-step">
+          <span class="flow-step-num">02</span>
+          <div class="flow-step-title">痛點</div>
+          <div class="flow-step-desc">正在承受的代價，不是「不方便」</div>
+        </div>
+        <div class="flow-step">
+          <span class="flow-step-num">03</span>
+          <div class="flow-step-title">場景</div>
+          <div class="flow-step-desc">痛點在什麼情境下發生</div>
+        </div>
+        <div class="flow-step">
+          <span class="flow-step-num">04</span>
+          <div class="flow-step-title">需求</div>
+          <div class="flow-step-desc">要達到什麼結果，不是功能清單</div>
+        </div>
+        <div class="flow-step">
+          <span class="flow-step-num">05</span>
+          <div class="flow-step-title">邊界</div>
+          <div class="flow-step-desc">什麼不做 = 產品的靈魂</div>
+        </div>
+      </div>
+
+      <div class="persona-strip" style="margin-top:32px;">
+        <div class="persona">
+          <span class="persona-role">Persona A</span>
+          <h3>獨立經紀人</h3>
+          <p class="persona-pain">每份文件花 2-3 小時，法規填錯被客戶投訴</p>
+          <p class="persona-need">快速產出合規文件，不需要學新系統</p>
+        </div>
+        <div class="persona">
+          <span class="persona-role">Persona B</span>
+          <h3>一人公司賣家</h3>
+          <p class="persona-pain">手動回訊息接單，每天花 4 小時在 LINE 群組</p>
+          <p class="persona-need">自動化訂單流程，不中斷原本的銷售節奏</p>
+        </div>
+        <div class="persona">
+          <span class="persona-role">Persona C</span>
+          <h3>小團隊主管</h3>
+          <p class="persona-pain">員工各做各的，輸出品質不統一</p>
+          <p class="persona-need">標準化模板 + 品牌一致性，不是另一套 ERP</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12 引擎 -->
+    <div class="reveal" style="margin-top:80px;">
+      <h3 style="margin-bottom:12px;">12 條設計引擎</h3>
+      <p style="max-width:640px; margin-bottom:32px;">每個設計決策的檢查點。不是規範，是校準工具。</p>
+
+      <div class="engine-grid">
+        <div class="engine-cell"><strong>熵減</strong><span>加的東西有明確職責？</span></div>
+        <div class="engine-cell"><strong>底層遷移</strong><span>骨架能搬到別的領域？</span></div>
+        <div class="engine-cell"><strong>Inside-out</strong><span>先問為什麼存在？</span></div>
+        <div class="engine-cell"><strong>外化元框架</strong><span>狀態可見？下一步明確？</span></div>
+        <div class="engine-cell"><strong>血清素設計</strong><span>用完能安心離開？</span></div>
+        <div class="engine-cell"><strong>失敗=Log</strong><span>失敗是 debug 不是判決？</span></div>
+        <div class="engine-cell"><strong>三問檢驗</strong><span>更簡單？更好管？更好擴？</span></div>
+        <div class="engine-cell"><strong>有主見設計</strong><span>有最佳解就系統決定？</span></div>
+        <div class="engine-cell"><strong>課題分離</strong><span>不越界管使用者的決定？</span></div>
+        <div class="engine-cell"><strong>離散碼連續驗</strong><span>確定邏輯產生「懂我」感？</span></div>
+        <div class="engine-cell"><strong>四層架構</strong><span>從原理層往上建？</span></div>
+        <div class="engine-cell"><strong>灰度思維</strong><span>標記邊界，不做二元判定？</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ==================== HOW ==================== -->
+<section id="how">
+  <div class="container">
+    <span class="section-label reveal">02 / How</span>
+    <h2 class="section-title reveal">怎麼落地：SDD 工作流</h2>
+    <p class="section-desc reveal">
+      Spec-Driven Development ── 先定義「對的標準」，再去達到它，再驗證達到了。不是蓋房子的瀑布式，是 Popper 證偽主義的開發循環。
+    </p>
+
+    <!-- SDD 主流程 -->
+    <div class="flow reveal">
+      <div class="flow-step">
+        <span class="flow-step-num">01</span>
+        <div class="flow-step-title">discuss</div>
+        <div class="flow-step-desc">需求不清楚時討論，可跳過</div>
+      </div>
+      <div class="flow-step flow-step--active">
+        <span class="flow-step-num">02</span>
+        <div class="flow-step-title">propose</div>
+        <div class="flow-step-desc">spec + design + tasks 三件套</div>
+      </div>
+      <div class="flow-step">
+        <span class="flow-step-num">03</span>
+        <div class="flow-step-title">analyze</div>
+        <div class="flow-step-desc">四維一致性檢查，0 findings</div>
+      </div>
+      <div class="flow-step flow-step--active">
+        <span class="flow-step-num">04</span>
+        <div class="flow-step-title">TDD</div>
+        <div class="flow-step-desc">失敗矩陣 + 紅燈測試</div>
+      </div>
+      <div class="flow-step">
+        <span class="flow-step-num">05</span>
+        <div class="flow-step-title">apply</div>
+        <div class="flow-step-desc">派工執行，紅燈變綠燈</div>
+      </div>
+      <div class="flow-step">
+        <span class="flow-step-num">06</span>
+        <div class="flow-step-title">archive</div>
+        <div class="flow-step-desc">完成歸檔</div>
+      </div>
+    </div>
+
+    <div class="reveal" style="margin-top:16px;">
+      <p style="font-size:0.82rem; color:var(--text-dim);">
+        需求變更時，不在程式碼裡偏離 spec ── 先 <code>ingest</code> 更新 spec，重新 analyze，再繼續 apply。Spec 是可推翻的假說，不是不能改的設計圖。
+      </p>
+    </div>
+
+    <!-- Propose 產出 -->
+    <div class="grid-3 reveal" style="margin-top:64px;">
+      <div class="card">
+        <span class="card-number">spec.md</span>
+        <h3>功能規格</h3>
+        <p>問題陳述、目標、功能範圍、排除範圍、接受標準。每條接受標準都對應一個紅燈測試。</p>
+      </div>
+      <div class="card">
+        <span class="card-number">design.md</span>
+        <h3>設計決策</h3>
+        <p>選了什麼、為什麼選、否決了什麼。六個月後回來看，能立刻理解決策脈絡。</p>
+      </div>
+      <div class="card">
+        <span class="card-number">tasks.md</span>
+        <h3>實作清單</h3>
+        <p>依 Wave 分組，每個任務標註工具。不同檔案可並行，同檔案必須串行。</p>
+      </div>
+    </div>
+
+    <!-- TDD 紅綠燈 -->
+    <div class="reveal" style="margin-top:80px;">
+      <h3 style="margin-bottom:12px;">TDD：先證明「這會壞」，再去修</h3>
+      <p style="max-width:640px; margin-bottom:32px;">
+        Phase 2（紅燈）和 Phase 3（綠燈）不能顛倒。先有實作再寫測試，測試會在不知不覺中配合實作 ── 失去驗證的意義。
+      </p>
+
+      <div class="tdd-flow">
+        <div class="tdd-phase">
+          <div class="tdd-light tdd-light--blue"></div>
+          <h3>Phase 1</h3>
+          <p>Spec 定義「什麼是對的」</p>
+        </div>
+        <div class="tdd-phase">
+          <div class="tdd-light tdd-light--red"></div>
+          <h3>Phase 2</h3>
+          <p>寫測試，證明現在是錯的</p>
+        </div>
+        <div class="tdd-phase">
+          <div class="tdd-light tdd-light--green"></div>
+          <h3>Phase 3</h3>
+          <p>寫實作，讓紅燈變綠燈</p>
+        </div>
+        <div class="tdd-phase">
+          <div class="tdd-light tdd-light--yellow"></div>
+          <h3>Phase 4</h3>
+          <p>重構，不改行為只改結構</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 失敗矩陣 -->
+    <div class="reveal" style="margin-top:48px;">
+      <h3 style="margin-bottom:12px;">失敗矩陣：在動手前窮舉失敗點</h3>
+      <p style="max-width:640px; margin-bottom:32px;">
+        每個可能失敗的情境都有明確的測試名稱和預期結果。確認清單完整後才開始寫實作。
+      </p>
+
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>失敗點</th>
+            <th>紅燈測試</th>
+            <th style="color:var(--green);">預期結果</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>未知的指令</td>
+            <td><code>unknown-cmd-throws</code></td>
+            <td>拋出明確錯誤訊息</td>
+          </tr>
+          <tr>
+            <td>重設後狀態不回初始值</td>
+            <td><code>store-reset-defaults</code></td>
+            <td>所有欄位歸零</td>
+          </tr>
+          <tr>
+            <td>正式環境啟用了測試模組</td>
+            <td><code>prod-throws-error</code></td>
+            <td>拋出環境錯誤</td>
+          </tr>
+          <tr>
+            <td>狀態更新後沒有觸發</td>
+            <td><code>activate-updates-status</code></td>
+            <td>狀態正確轉換</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 逆向拆解 -->
+    <div class="reveal" style="margin-top:80px;">
+      <h3 style="margin-bottom:12px;">逆向拆解：從市場推回技術</h3>
+      <p style="max-width:640px; margin-bottom:32px;">
+        不是「我會什麼技術就做什麼產品」，而是「市場需要什麼，倒推需要哪些技術特性，再選最適合的候選方案」。
+      </p>
+
+      <ul class="tree">
+        <li>
+          <strong>市場需求</strong> ── 目標用戶的核心痛點是什麼？
+          <ul class="tree-sub">
+            <li>使用場景決定產品形態（離線需求 = 桌面應用、即時協作 = Web）</li>
+          </ul>
+        </li>
+        <li>
+          <strong>產品特性</strong> ── 解決痛點需要哪些技術約束？
+          <ul class="tree-sub">
+            <li>離線、本地資料、跨平台、高品質輸出、維護可行性</li>
+          </ul>
+        </li>
+        <li>
+          <strong>候選評估</strong> ── 列出 2-4 個候選，逐一比對約束
+          <ul class="tree-sub">
+            <li>不以「熟悉度」或「流行度」選技術，以「約束匹配度」選</li>
+          </ul>
+        </li>
+        <li>
+          <strong>記錄決策</strong> ── 寫進 design.md，含否決理由
+          <ul class="tree-sub">
+            <li>六個月後能回溯：為什麼選 A、為什麼不選 B 和 C</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <!-- 技術選型決策樹 -->
+    <div class="reveal" style="margin-top:64px;">
+      <h3 style="margin-bottom:12px;">選型決策樹（範例）</h3>
+      <p style="max-width:640px; margin-bottom:32px;">每個技術選擇都有對應的約束來源，不是偏好。</p>
+
+      <div class="dtree">
+        <div class="dtree-node">
+          <div class="dtree-q">需要離線使用嗎？</div>
+          <div class="dtree-a dtree-a--yes">是 ── 桌面應用或 PWA</div>
+        </div>
+        <div class="dtree-node">
+          <div class="dtree-q">需要跨平台嗎？</div>
+          <div class="dtree-a dtree-a--yes">是 ── 排除原生方案</div>
+        </div>
+        <div class="dtree-node">
+          <div class="dtree-q">前端生態 + 小 bundle？</div>
+          <div class="dtree-a dtree-a--yes">是 ── Tauri（Rust + Web）</div>
+        </div>
+        <div class="dtree-node">
+          <div class="dtree-q">自己做 auth / billing？</div>
+          <div class="dtree-a dtree-a--no">否 ── 用 SaaS boilerplate，省 6-10 週</div>
+        </div>
+        <div class="dtree-node">
+          <div class="dtree-q">維護成本可控？</div>
+          <div class="dtree-a dtree-a--yes">是 ── 差異化功能自己做，標準化用現成</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 三模式 -->
+    <div class="reveal" style="margin-top:80px;">
+      <h3 style="margin-bottom:12px;">開發環境三模式</h3>
+      <p style="max-width:640px; margin-bottom:32px;">
+        消除打包等待是熵減實踐。Mock Backend 讓瀏覽器模式能跑完整流程，迭代速度從 3 分鐘降到 1 秒以內。
+      </p>
+
+      <div class="modes">
+        <div class="mode-card">
+          <div class="mode-icon">pnpm dev</div>
+          <h3>瀏覽器模式</h3>
+          <div class="mode-time">&lt; 1 秒</div>
+          <p>日常主力。Mock Backend 模擬全部 IPC，熱重載即時回饋。UI 開發、邏輯測試、狀態管理全在這做。</p>
+        </div>
+        <div class="mode-card">
+          <div class="mode-icon">tauri dev</div>
+          <h3>整合模式</h3>
+          <div class="mode-time">~2 分鐘</div>
+          <p>驗證真實 IPC、本地資料庫、檔案存取。實作新 command 後來這裡確認 Rust 後端正確。</p>
+        </div>
+        <div class="mode-card">
+          <div class="mode-icon">tauri build</div>
+          <h3>打包模式</h3>
+          <div class="mode-time">~3 分鐘</div>
+          <p>Release 前的最終驗收。完整編譯 + 打包，產出可分發的安裝檔。</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ==================== WHAT ==================== -->
+<section id="what">
+  <div class="container">
+    <span class="section-label reveal">03 / What</span>
+    <h2 class="section-title reveal">產出物概覽</h2>
+    <p class="section-desc reveal">
+      哲學和流程最終要落地成可用的東西。以下是這套方法論實際產出的文件和工具。
+    </p>
+
+    <div class="output-grid reveal">
+      <div class="output-item">
+        <span class="output-tag">SPEC</span>
+        <h3>功能規格文件</h3>
+        <p>每個功能的問題陳述、目標、範圍、排除範圍、接受標準。是可推翻的假說，不是凍結的需求。</p>
+      </div>
+      <div class="output-item">
+        <span class="output-tag">DESIGN</span>
+        <h3>設計決策紀錄</h3>
+        <p>每個技術選型的完整脈絡：選了什麼、為什麼、否決了什麼、否決的理由。讓接手的人不用猜意圖。</p>
+      </div>
+      <div class="output-item">
+        <span class="output-tag">TEST</span>
+        <h3>失敗矩陣 + 紅燈測試</h3>
+        <p>窮舉每個可能失敗的情境，對應測試名稱和預期結果。「完成」的定義：所有紅燈變綠燈。</p>
+      </div>
+      <div class="output-item">
+        <span class="output-tag">TASK</span>
+        <h3>分波任務清單</h3>
+        <p>依序分 Wave，每個任務標註工具和負責方。不同檔案並行，同檔案串行。完成即勾選。</p>
+      </div>
+      <div class="output-item">
+        <span class="output-tag">LOG</span>
+        <h3>踩坑紀錄</h3>
+        <p>每次失敗即時記進 lessons.md：問題、根因、解法、教訓。同一個坑不踩第二次。</p>
+      </div>
+      <div class="output-item">
+        <span class="output-tag">ARCH</span>
+        <h3>逆向拆解樹</h3>
+        <p>從市場需求到技術選型的完整推導鏈。每個選擇都有約束來源，不是偏好。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ==================== FOOTER ==================== -->
+<footer>
+  <div class="container">
+    <a href="https://github.com/nicholasleezt/prd-saas-dev" target="_blank" rel="noopener">GitHub Repository</a>
+    <p>以哲學為根基、以證偽為方法、以熵減為原則</p>
+  </div>
+</footer>
+
+<!-- ==================== SCROLL REVEAL ==================== -->
+<script>
+(function() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(function(el) { obs.observe(el); });
+})();
+</script>
+
+</body>
+</html>
