@@ -18,6 +18,8 @@ All content is derived from battle-tested practices -- not theory.
 | [decision-tree.md](./decision-tree.md) | Technology selection decision tree | Choosing frameworks, databases, or architecture |
 | [pitfalls.md](./pitfalls.md) | Common SaaS/desktop development pitfalls and solutions | Avoiding known failure modes |
 | [agent-routing.md](./agent-routing.md) | AI agent routing strategy for multi-model development | Dispatching tasks to the right AI model |
+| [client-discovery-workflow.md](./client-discovery-workflow.md) | Human-AI collaboration protocol for evaluating new prospects | When a client lead or external research arrives |
+| [client-opportunity-mapping.md](./client-opportunity-mapping.md) | Five-step procedure mapping client pain to owned assets | Stage 2 of client discovery, before any proposal |
 | [templates/native-bridge-template.md](./templates/native-bridge-template.md) | IPC bridge template with dev mock support | Building desktop apps with web frontends |
 | [templates/release-checklist.md](./templates/release-checklist.md) | Pre-release verification checklist | Before any version release |
 
