@@ -68,6 +68,7 @@ prd-saas-dev/
 │   ├── decision-tree.md             技術選型決策樹
 │   ├── testing-strategy.md          三層測試策略
 │   ├── dev-environment.md           開發環境三模式
+│   ├── client-discovery-workflow.md 客戶發掘工作流（Fish + Claude 分工）
 │   └── client-opportunity-mapping.md 客戶痛點對應自有資產的方法論
 └── what/                    原始素材：具體產出與參考（中文）
     ├── architecture/            技術架構
