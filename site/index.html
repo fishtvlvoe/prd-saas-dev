@@ -672,6 +672,318 @@ code {
   border: 1px solid var(--border);
   color: var(--accent);
 }
+
+/* ========== FEYNMAN EXPLAIN CARDS ========== */
+.glossary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 8px;
+}
+
+@media (max-width: 768px) {
+  .glossary-grid { grid-template-columns: 1fr; }
+}
+
+.explain-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  padding: 24px 28px;
+}
+
+.explain-card__term {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.explain-card__plain {
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+  line-height: 1.6;
+}
+
+.explain-card__analogy {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+
+.explain-card__analogy-label {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+  margin-right: 8px;
+}
+
+.explain-card__diagram {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+/* Diagram: generic row */
+.dia-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  flex-wrap: wrap;
+}
+
+.dia-box {
+  padding: 10px 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  text-align: center;
+  min-width: 64px;
+}
+
+.dia-box--accent { border-color: var(--accent); color: var(--accent); }
+.dia-box--green { border-color: var(--green); color: var(--green); }
+.dia-box--dashed { border-style: dashed; }
+
+.dia-arrow {
+  width: 32px;
+  height: 2px;
+  background: var(--text-dim);
+  position: relative;
+  flex-shrink: 0;
+}
+
+.dia-arrow::after {
+  content: '';
+  position: absolute;
+  right: -1px;
+  top: -4px;
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 8px solid var(--text-dim);
+}
+
+.dia-arrow--accent { background: var(--accent); }
+.dia-arrow--accent::after { border-left-color: var(--accent); }
+
+/* Diagram: traffic lights */
+.dia-lights {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 24px;
+}
+
+.dia-light-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.dia-light {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+.dia-light--red { background: var(--red); box-shadow: 0 0 12px rgba(255,23,68,0.4); }
+.dia-light--green { background: var(--green); box-shadow: 0 0 12px rgba(0,200,83,0.4); }
+.dia-light--yellow { background: var(--yellow); box-shadow: 0 0 12px rgba(255,214,0,0.3); }
+
+.dia-light-label {
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  text-align: center;
+}
+
+/* Diagram: entropy comparison */
+.dia-entropy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.dia-entropy-box {
+  width: 80px;
+  height: 60px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.dia-entropy-box span {
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  position: absolute;
+  bottom: -18px;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+
+.dia-dots-mess {
+  display: grid;
+  grid-template-columns: repeat(4, 6px);
+  gap: 3px;
+  transform: rotate(12deg);
+}
+
+.dia-dots-mess i {
+  width: 6px;
+  height: 6px;
+  background: var(--red);
+  display: block;
+}
+
+.dia-dots-mess i:nth-child(2) { transform: translate(4px, -2px); }
+.dia-dots-mess i:nth-child(3) { transform: translate(-2px, 3px); }
+.dia-dots-mess i:nth-child(5) { transform: translate(3px, 1px); }
+.dia-dots-mess i:nth-child(7) { transform: translate(-1px, -3px); }
+
+.dia-dots-tidy {
+  display: grid;
+  grid-template-columns: repeat(4, 6px);
+  gap: 3px;
+}
+
+.dia-dots-tidy i {
+  width: 6px;
+  height: 6px;
+  background: var(--green);
+  display: block;
+}
+
+/* Diagram: checklist */
+.dia-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dia-check-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.72rem;
+  color: var(--text-dim);
+}
+
+.dia-check-mark {
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.dia-check-mark::after {
+  content: '';
+  width: 4px;
+  height: 8px;
+  border-right: 2px solid var(--green);
+  border-bottom: 2px solid var(--green);
+  transform: rotate(45deg) translate(-1px, -1px);
+}
+
+/* Diagram: falsification */
+.dia-falsify {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.dia-falsify-box {
+  width: 80px;
+  height: 50px;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.dia-falsify-box--hypothesis {
+  background: var(--bg-card);
+  color: var(--text-secondary);
+}
+
+.dia-falsify-box--refuted {
+  background: rgba(255,23,68,0.08);
+  border-color: var(--red);
+  color: var(--red);
+}
+
+/* ========== TOOLTIPS ========== */
+.term-tip {
+  position: relative;
+  display: inline;
+  border-bottom: 1px dashed var(--accent);
+  cursor: help;
+}
+
+.term-tip__text {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-card);
+  border: 1px solid var(--accent);
+  padding: 8px 14px;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  z-index: 10;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.term-tip__text::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid var(--accent);
+}
+
+.term-tip:hover .term-tip__text {
+  opacity: 1;
+}
+
+@media (max-width: 600px) {
+  .term-tip__text {
+    white-space: normal;
+    min-width: 180px;
+    max-width: 240px;
+  }
+}
 </style>
 </head>
 <body>
@@ -685,9 +997,10 @@ code {
         設計軟體開發
       </h1>
       <p class="hero-sub">
-        用 Popper 證偽主義取代瀑布式開發。用熵減原則取代功能堆積。用血清素設計取代多巴胺陷阱。這是一份關於「為什麼這樣做」的完整紀錄。
+        用 <span class="term-tip">Popper 證偽主義<span class="term-tip__text">好的想法必須能被「證明是錯的」</span></span>取代瀑布式開發。用<span class="term-tip">熵減原則<span class="term-tip__text">主動讓東西保持簡單，不讓它自然變亂</span></span>取代功能堆積。用血清素設計取代多巴胺陷阱。這是一份關於「為什麼這樣做」的完整紀錄。
       </p>
       <nav class="hero-nav">
+        <a href="#glossary">術語翻譯</a>
         <a href="#why">WHY</a>
         <a href="#how">HOW</a>
         <a href="#what">WHAT</a>
@@ -695,6 +1008,244 @@ code {
     </div>
   </div>
 </section>
+
+<!-- ==================== GLOSSARY ==================== -->
+<section id="glossary" style="padding: 60px 0 40px;">
+  <div class="container">
+    <span class="section-label reveal">術語翻譯站</span>
+    <h2 class="section-title reveal" style="margin-bottom:8px;">看不懂的英文？這裡翻給你聽</h2>
+    <p class="section-desc reveal" style="margin-bottom:40px;">
+      下面會出現一些專業術語，別擔心。每個都用生活中的例子解釋。看完這一站，後面的內容就不會有壓力了。
+    </p>
+
+    <div class="glossary-grid">
+
+      <!-- SDD -->
+      <div class="explain-card reveal">
+        <span class="explain-card__term">SDD -- 規格驅動開發 (Spec-Driven Development)</span>
+        <p class="explain-card__plain">先寫好「完成品長什麼樣」的說明書，再開始動手做</p>
+        <div class="explain-card__analogy">
+          <span class="explain-card__analogy-label">比喻</span>
+          就像畫畫 -- 先用鉛筆打草稿、確認構圖，再用鋼筆描邊，最後才上水彩
+        </div>
+        <div class="explain-card__diagram">
+          <div class="dia-row">
+            <div class="dia-box dia-box--accent">草稿</div>
+            <div class="dia-arrow dia-arrow--accent"></div>
+            <div class="dia-box">描邊</div>
+            <div class="dia-arrow"></div>
+            <div class="dia-box dia-box--green">上色</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TDD -->
+      <div class="explain-card reveal">
+        <span class="explain-card__term">TDD -- 測試驅動開發 (Test-Driven Development)</span>
+        <p class="explain-card__plain">先寫「怎樣算失敗」的考卷，再寫程式去通過考試</p>
+        <div class="explain-card__analogy">
+          <span class="explain-card__analogy-label">比喻</span>
+          就像考駕照 -- 先知道考題（紅燈停、綠燈行），再去練車通過測驗
+        </div>
+        <div class="explain-card__diagram">
+          <div class="dia-lights">
+            <div class="dia-light-unit">
+              <div class="dia-light dia-light--red"></div>
+              <span class="dia-light-label">寫考卷</span>
+            </div>
+            <div class="dia-light-unit">
+              <div class="dia-light dia-light--green"></div>
+              <span class="dia-light-label">通過考試</span>
+            </div>
+            <div class="dia-light-unit">
+              <div class="dia-light dia-light--yellow"></div>
+              <span class="dia-light-label">整理筆記</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRD -->
+      <div class="explain-card reveal">
+        <span class="explain-card__term">PRD -- 產品需求文件 (Product Requirements Document)</span>
+        <p class="explain-card__plain">一份寫清楚「這個東西要做什麼」的計畫書</p>
+        <div class="explain-card__analogy">
+          <span class="explain-card__analogy-label">比喻</span>
+          就像餐廳菜單 -- 寫清楚每道菜的名稱、食材、份量，廚師照著做就不會出錯
+        </div>
+        <div class="explain-card__diagram">
+          <div class="dia-checklist">
+            <div class="dia-check-item"><span class="dia-check-mark"></span>菜名：紅燒牛肉麵</div>
+            <div class="dia-check-item"><span class="dia-check-mark"></span>食材：牛腱、蔥、薑</div>
+            <div class="dia-check-item"><span class="dia-check-mark"></span>份量：一人份 500ml</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RAG -->
+      <div class="explain-card reveal">
+        <span class="explain-card__term">RAG -- 檢索增強生成 (Retrieval-Augmented Generation)</span>
+        <p class="explain-card__plain">AI 先去翻資料庫找答案，再用自己的話回答你</p>
+        <div class="explain-card__analogy">
+          <span class="explain-card__analogy-label">比喻</span>
+          就像開卷考試 -- 可以翻課本找資料，再用自己的話寫答案
+        </div>
+        <div class="explain-card__diagram">
+          <div class="dia-row">
+            <div class="dia-box">課本</div>
+            <div class="dia-arrow"></div>
+            <div class="dia-box dia-box--accent">翻找</div>
+            <div class="dia-arrow dia-arrow--accent"></div>
+            <div class="dia-box dia-box--green">自己寫答案</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LLM -->
+      <div class="explain-card reveal">
+        <span class="explain-card__term">LLM -- 大型語言模型 (Large Language Model)</span>
+        <p class="explain-card__plain">讀過幾乎所有網路上文字的 AI，能理解和產生人類語言</p>
+        <div class="explain-card__analogy">
+          <span class="explain-card__analogy-label">比喻</span>
+          就像一個讀過全世界所有書的人，你問什麼他都能回答，但偶爾會記錯
+        </div>
+        <div class="explain-card__diagram">
+          <div class="dia-row">
+            <div class="dia-box" style="font-size:0.72rem;">所有的書</div>
+            <div class="dia-arrow"></div>
+            <div class="dia-box dia-box--accent">大腦</div>
+            <div class="dia-arrow dia-arrow--accent"></div>
+            <div class="dia-box dia-box--green">回答你</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Spec -->
+      <div class="explain-card reveal">
+        <span class="explain-card__term">Spec -- 規格書 (Specification)</span>
+        <p class="explain-card__plain">描述「做好的東西要符合什麼條件」的清單</p>
+        <div class="explain-card__analogy">
+          <span class="explain-card__analogy-label">比喻</span>
+          就像建築藍圖 -- 標明尺寸、材料、結構，工人照著蓋就不會歪
+        </div>
+        <div class="explain-card__diagram">
+          <div class="dia-checklist">
+            <div class="dia-check-item"><span class="dia-check-mark"></span>長度：10 公尺</div>
+            <div class="dia-check-item"><span class="dia-check-mark"></span>材料：鋼筋混凝土</div>
+            <div class="dia-check-item"><span class="dia-check-mark"></span>承重：500 公斤</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 熵 -->
+      <div class="explain-card reveal">
+        <span class="explain-card__term">熵 / 熵減原則</span>
+        <p class="explain-card__plain">東西會自然變亂，所以設計時要主動讓它保持簡單</p>
+        <div class="explain-card__analogy">
+          <span class="explain-card__analogy-label">比喻</span>
+          就像房間 -- 不整理就會越來越亂，好的設計就是讓房間「自動保持整齊」的收納系統
+        </div>
+        <div class="explain-card__diagram">
+          <div class="dia-entropy">
+            <div class="dia-entropy-box">
+              <div class="dia-dots-mess">
+                <i></i><i></i><i></i><i></i>
+                <i></i><i></i><i></i><i></i>
+              </div>
+              <span>越來越亂</span>
+            </div>
+            <div class="dia-arrow dia-arrow--accent"></div>
+            <div class="dia-entropy-box" style="border-color:var(--green);">
+              <div class="dia-dots-tidy">
+                <i></i><i></i><i></i><i></i>
+                <i></i><i></i><i></i><i></i>
+              </div>
+              <span>保持整齊</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Popper -->
+      <div class="explain-card reveal">
+        <span class="explain-card__term">Popper 證偽主義</span>
+        <p class="explain-card__plain">好的想法必須能被「證明是錯的」，不能證明錯的想法沒有價值</p>
+        <div class="explain-card__analogy">
+          <span class="explain-card__analogy-label">比喻</span>
+          就像科學實驗 -- 「所有天鵝都是白的」這句話，只要找到一隻黑天鵝就推翻了
+        </div>
+        <div class="explain-card__diagram">
+          <div class="dia-falsify">
+            <div class="dia-falsify-box dia-falsify-box--hypothesis">?</div>
+            <div class="dia-arrow"></div>
+            <div class="dia-falsify-box dia-falsify-box--refuted">X</div>
+            <span style="font-size:0.68rem; color:var(--text-dim); margin-left:8px;">找到反例 = 推翻</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mock -->
+      <div class="explain-card reveal">
+        <span class="explain-card__term">Mock -- 模擬資料</span>
+        <p class="explain-card__plain">用假資料代替真實系統來測試，不怕搞壞東西</p>
+        <div class="explain-card__analogy">
+          <span class="explain-card__analogy-label">比喻</span>
+          就像飛行模擬器 -- 學開飛機不用真的上天，在模擬器裡練到熟再上場
+        </div>
+        <div class="explain-card__diagram">
+          <div class="dia-row">
+            <div class="dia-box dia-box--dashed">模擬器</div>
+            <div class="dia-arrow"></div>
+            <div class="dia-box">練到熟</div>
+            <div class="dia-arrow dia-arrow--accent"></div>
+            <div class="dia-box dia-box--green">真正上場</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- API -->
+      <div class="explain-card reveal">
+        <span class="explain-card__term">API -- 應用程式介面 (Application Programming Interface)</span>
+        <p class="explain-card__plain">兩個軟體之間溝通的約定方式</p>
+        <div class="explain-card__analogy">
+          <span class="explain-card__analogy-label">比喻</span>
+          就像餐廳點餐 -- 你（客人）看菜單點菜，服務生（API）把你的需求傳給廚房，再把菜端回來
+        </div>
+        <div class="explain-card__diagram">
+          <div class="dia-row">
+            <div class="dia-box">客人</div>
+            <div class="dia-arrow"></div>
+            <div class="dia-box dia-box--accent">服務生</div>
+            <div class="dia-arrow"></div>
+            <div class="dia-box">廚房</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- IPC -->
+      <div class="explain-card reveal">
+        <span class="explain-card__term">IPC -- 行程間通訊 (Inter-Process Communication)</span>
+        <p class="explain-card__plain">同一台電腦裡，兩個程式互相傳話的方式</p>
+        <div class="explain-card__analogy">
+          <span class="explain-card__analogy-label">比喻</span>
+          就像辦公室裡兩個部門之間的內線電話
+        </div>
+        <div class="explain-card__diagram">
+          <div class="dia-row">
+            <div class="dia-box">部門 A</div>
+            <div style="width:40px; height:2px; background:var(--text-dim); position:relative; display:flex; align-items:center; justify-content:center;">
+              <div style="width:10px; height:10px; border-radius:50%; background:var(--accent); position:absolute;"></div>
+            </div>
+            <div class="dia-box">部門 B</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
 
 <!-- ==================== WHY ==================== -->
 <section id="why">
@@ -747,7 +1298,7 @@ code {
     <div class="reveal" style="margin-top:80px;">
       <h3 style="margin-bottom:12px;">問題是假說，不是事實</h3>
       <p style="max-width:640px; margin-bottom:32px;">
-        受 Popper 證偽主義啟發：一個問題只有在「能被證明是假的」時，才值得投入資源解決。不找支持自己的證據，找能推翻自己的證據。
+        受 <span class="term-tip">Popper 證偽主義<span class="term-tip__text">好的想法必須能被「證明是錯的」</span></span>啟發：一個問題只有在「能被證明是假的」時，才值得投入資源解決。不找支持自己的證據，找能推翻自己的證據。
       </p>
 
       <table class="compare">
@@ -918,9 +1469,9 @@ code {
 <section id="how">
   <div class="container">
     <span class="section-label reveal">02 / How</span>
-    <h2 class="section-title reveal">怎麼落地：SDD 工作流</h2>
+    <h2 class="section-title reveal">怎麼落地：<span class="term-tip">SDD<span class="term-tip__text">先寫好說明書，再開始動手做</span></span> 工作流</h2>
     <p class="section-desc reveal">
-      Spec-Driven Development ── 先定義「對的標準」，再去達到它，再驗證達到了。不是蓋房子的瀑布式，是 Popper 證偽主義的開發循環。
+      <span class="term-tip">Spec-Driven Development<span class="term-tip__text">規格驅動開發 -- 先定好標準再動手</span></span> ── 先定義「對的標準」，再去達到它，再驗證達到了。不是蓋房子的瀑布式，是 <span class="term-tip">Popper 證偽主義<span class="term-tip__text">好的想法必須能被「證明是錯的」</span></span>的開發循環。
     </p>
 
     <!-- SDD 主流程 -->
@@ -959,7 +1510,7 @@ code {
 
     <div class="reveal" style="margin-top:16px;">
       <p style="font-size:0.82rem; color:var(--text-dim);">
-        需求變更時，不在程式碼裡偏離 spec ── 先 <code>ingest</code> 更新 spec，重新 analyze，再繼續 apply。Spec 是可推翻的假說，不是不能改的設計圖。
+        需求變更時，不在程式碼裡偏離 <span class="term-tip">spec<span class="term-tip__text">規格書 -- 「做好的東西要符合什麼條件」的清單</span></span> ── 先 <code>ingest</code> 更新 spec，重新 analyze，再繼續 apply。Spec 是可推翻的假說，不是不能改的設計圖。
       </p>
     </div>
 
@@ -984,7 +1535,7 @@ code {
 
     <!-- TDD 紅綠燈 -->
     <div class="reveal" style="margin-top:80px;">
-      <h3 style="margin-bottom:12px;">TDD：先證明「這會壞」，再去修</h3>
+      <h3 style="margin-bottom:12px;"><span class="term-tip">TDD<span class="term-tip__text">測試驅動開發 -- 先寫考卷，再寫程式通過考試</span></span>：先證明「這會壞」，再去修</h3>
       <p style="max-width:640px; margin-bottom:32px;">
         Phase 2（紅燈）和 Phase 3（綠燈）不能顛倒。先有實作再寫測試，測試會在不知不覺中配合實作 ── 失去驗證的意義。
       </p>
@@ -1121,7 +1672,7 @@ code {
     <div class="reveal" style="margin-top:80px;">
       <h3 style="margin-bottom:12px;">開發環境三模式</h3>
       <p style="max-width:640px; margin-bottom:32px;">
-        消除打包等待是熵減實踐。Mock Backend 讓瀏覽器模式能跑完整流程，迭代速度從 3 分鐘降到 1 秒以內。
+        消除打包等待是<span class="term-tip">熵減<span class="term-tip__text">主動讓東西保持簡單</span></span>實踐。<span class="term-tip">Mock<span class="term-tip__text">模擬資料 -- 用假資料代替真實系統來測試</span></span> Backend 讓瀏覽器模式能跑完整流程，迭代速度從 3 分鐘降到 1 秒以內。
       </p>
 
       <div class="modes">
@@ -1129,13 +1680,13 @@ code {
           <div class="mode-icon">pnpm dev</div>
           <h3>瀏覽器模式</h3>
           <div class="mode-time">&lt; 1 秒</div>
-          <p>日常主力。Mock Backend 模擬全部 IPC，熱重載即時回饋。UI 開發、邏輯測試、狀態管理全在這做。</p>
+          <p>日常主力。<span class="term-tip">Mock<span class="term-tip__text">用假資料代替真實系統</span></span> Backend 模擬全部 <span class="term-tip">IPC<span class="term-tip__text">行程間通訊 -- 兩個程式互相傳話</span></span>，熱重載即時回饋。UI 開發、邏輯測試、狀態管理全在這做。</p>
         </div>
         <div class="mode-card">
           <div class="mode-icon">tauri dev</div>
           <h3>整合模式</h3>
           <div class="mode-time">~2 分鐘</div>
-          <p>驗證真實 IPC、本地資料庫、檔案存取。實作新 command 後來這裡確認 Rust 後端正確。</p>
+          <p>驗證真實 <span class="term-tip">IPC<span class="term-tip__text">行程間通訊 -- 同一台電腦裡兩個程式互相傳話</span></span>、本地資料庫、檔案存取。實作新 command 後來這裡確認 Rust 後端正確。</p>
         </div>
         <div class="mode-card">
           <div class="mode-icon">tauri build</div>
