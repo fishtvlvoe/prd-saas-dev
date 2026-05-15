@@ -39,6 +39,9 @@ What（具體做了什麼）
 
 ```
 prd-saas-dev/
+├── meta/                    知識管理規則（內容分類、貢獻指引）
+│   └── content-classification.md 新知識放哪：人 / AI / 雙寫判別表
+│
 ├── site/                    給人看（視覺化網頁）
 │   └── index.html               單頁 Landing Page，費曼學習法解釋所有術語
 │
