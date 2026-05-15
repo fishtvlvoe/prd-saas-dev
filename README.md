@@ -6,7 +6,7 @@
 
 ### 給人看 — 視覺化 Landing Page
 
-**[打開 Landing Page](site/index.html)** — 單頁網頁，所有專業術語都有白話翻譯 + 生活比喻 + 圖解（費曼學習法）。沒有工程背景也能讀懂。
+**[打開 Landing Page](https://fishtvlvoe.github.io/prd-saas-dev/site/index.html)** — 單頁網頁，所有專業術語都有白話翻譯 + 生活比喻 + 圖解（費曼學習法）。沒有工程背景也能讀懂。
 
 ### 給 AI 看 — 英文實作指南
 
