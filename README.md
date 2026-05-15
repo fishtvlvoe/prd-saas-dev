@@ -77,7 +77,9 @@ prd-saas-dev/
     ├── architecture/            技術架構
     ├── pitfalls/                踩坑紀錄
     ├── templates/               程式碼模板
-    └── checklists/              檢查清單
+    ├── checklists/              檢查清單
+    └── cases/                   客戶案例分析（套用方法論的實例）
+        └── jiaying-english.md       甲英英語補習班招生 AI 方案
 ```
 
 ---
